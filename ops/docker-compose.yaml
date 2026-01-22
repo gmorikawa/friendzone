@@ -1,0 +1,45 @@
+name: friendzone
+
+services:
+  mongodb:
+    image: mongo:8-noble
+    container_name: friendzone-mongodb
+    restart: always
+    ports:
+      - 5030:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: friendzone123
+    volumes:
+      - friendzone_mongodb_mnt:/data/db
+    networks:
+      friendzone_network:
+
+  redis:
+    image: redis:8-alpine
+    container_name: friendzone-redis
+    restart: always
+    ports:
+      - 5040:6379
+    volumes:
+      - friendzone_redis_mnt:/data
+    networks:
+      friendzone_network:
+
+volumes:
+  friendzone_mongodb_mnt:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/mongodb
+  friendzone_redis_mnt:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/redis
+
+networks:
+  friendzone_network:
+    driver: bridge
