@@ -12,8 +12,17 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: friendzone123
     volumes:
       - friendzone_mongodb_mnt:/data/db
+    command: ["mongod", "--bind_ip_all"]
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - 'mongodb://localhost:5030/admin'
+        - '--eval=db.runCommand({ping:1})'
+      retries: 3
+      timeout: 5s
     networks:
-      friendzone_network:
+      - friendzone_network
 
   redis:
     image: redis:8-alpine
@@ -24,7 +33,26 @@ services:
     volumes:
       - friendzone_redis_mnt:/data
     networks:
-      friendzone_network:
+      - friendzone_network
+    
+  mongodb-client:
+    image: mongo-express:latest
+    container_name: friendzone-mongodb-client
+    restart: unless-stopped
+    ports:
+      - 5050:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: friendzone123
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: fz123
+      ME_CONFIG_MONGODB_URL: mongodb://root:friendzone123@mongodb:27017/
+    depends_on:
+      - mongodb
+    networks:
+      - friendzone_network
 
 volumes:
   friendzone_mongodb_mnt:
