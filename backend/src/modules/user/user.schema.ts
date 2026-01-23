@@ -4,7 +4,7 @@ import { Prop, raw, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import type { Name } from "./interfaces/name.interface";
 
-export type UserDocument = HydratedDocument<UserModel>;
+export type UserDocument = HydratedDocument<User>;
 
 @Schema({
     timestamps: true,
@@ -18,7 +18,7 @@ export type UserDocument = HydratedDocument<UserModel>;
     },
     collection: "users",
 })
-export class UserModel {
+export class User {
     @Prop(raw({
         first: {
             type: String,
@@ -65,5 +65,5 @@ export class UserModel {
     updatedAt: Date;
 }
 
-export const UserSchema = SchemaFactory.createForClass(UserModel);
-export const UserFeature = { name: UserModel.name, schema: UserSchema };
+export const UserSchema = SchemaFactory.createForClass(User);
+export const UserFeature = { name: User.name, schema: UserSchema };

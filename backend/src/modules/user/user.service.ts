@@ -3,27 +3,27 @@ import { Model } from "mongoose";
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { UserModel } from "./user.schema";
+import { User } from "./user.schema";
 import { CreateUserDTO } from "./dtos/create-user.dto";
-import type { PasswordHasher } from "src/common/password-hasher/interfaces/password-hasher.interface";
+import type { HashedPassword, PasswordHasher, PlainPassword } from "src/common/password-hasher/interfaces/password-hasher.interface";
 import { EmailAlreadyExistsError } from "./user.errors";
 
 @Injectable()
 export class UserService {
     constructor(
-        @InjectModel(UserModel.name) private model: Model<UserModel>,
+        @InjectModel(User.name) private model: Model<User>,
         @Inject("PasswordHasher") private passwordHasher: PasswordHasher,
     ) { }
 
-    public async findByEmail(email: string): Promise<UserModel | null> {
+    public async findByEmail(email: string): Promise<User | null> {
         return this.model.findOne({ email });
     }
 
-    public async findAll(): Promise<UserModel[]> {
+    public async findAll(): Promise<User[]> {
         return this.model.find();
     }
 
-    public async create(createUser: CreateUserDTO): Promise<UserModel> {
+    public async create(createUser: CreateUserDTO): Promise<User> {
         const existingUser = await this.findByEmail(createUser.email);
 
         if (existingUser) {
@@ -38,5 +38,9 @@ export class UserService {
 
         return createdUser.save()
             .then(user => user.toJSON());
+    }
+
+    public async checkPassword(password: PlainPassword, hashedPassword: HashedPassword): Promise<boolean> {
+        return this.passwordHasher.compare(password, hashedPassword);
     }
 }
