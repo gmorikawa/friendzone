@@ -11,6 +11,9 @@ import { UserFeature } from "./user.schema";
     imports: [
         MongooseModule.forFeature([UserFeature])
     ],
+    exports: [
+        UserService,
+    ],
     controllers: [
         UserController,
     ],
