@@ -1,16 +1,22 @@
+import { Logo } from "@/shared/logo";
+import { useNavigate } from "@/shared/router/hooks/navigate";
+
+import { Button } from "@/components/inputs/button";
 import { Container } from "@/components/containers/container";
+import { Form } from "@/components/inputs/form";
 import { PasswordField } from "@/components/inputs/password-field";
 import { Stack } from "@/components/containers/stack";
 import { TextField } from "@/components/inputs/text-field";
 import { Title } from "@/components/typography/title";
-
-import { Logo } from "@/shared/logo";
-import { Button } from "@/components/inputs/button";
-import { validateSignInData } from "../utils/validation";
 import { useForm } from "@/components/inputs/form-controller";
-import { Form } from "@/components/inputs/form";
+
+import type { SignInUser } from "@/features/auth/types/sign-in-user";
+import { validateSignInData } from "@/features/auth/utils/validation";
+import { createUser } from "@/features/auth/utils/api";
 
 export function SignInPage() {
+    const navigate = useNavigate();
+
     const form = useForm({
         defaultValues: {
             firstName: "",
@@ -20,8 +26,14 @@ export function SignInPage() {
             confirmPassword: "",
         },
         validate: validateSignInData,
-        onSubmit: () => {
-            console.log("Form submitted:", form.entity);
+        onSubmit: (data: SignInUser) => {
+            createUser(data)
+                .then(() => {
+                    navigate.to("/auth/login");
+                })
+                .catch((error: Error) => {
+                    console.error("Error creating user:", error);
+                });
         },
     });
 

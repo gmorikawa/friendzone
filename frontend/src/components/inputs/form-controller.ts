@@ -20,7 +20,7 @@ export interface FormController<T> {
 export interface FormConfiguration<T extends Object> {
     defaultValues: Partial<T>;
     validate: (entity: Partial<T>) => ValidationResult;
-    onSubmit: () => void;
+    onSubmit: (validatedData: T) => void;
 }
 
 export function useForm<T extends Object>(config: FormConfiguration<T>) {
@@ -72,7 +72,7 @@ export function useForm<T extends Object>(config: FormConfiguration<T>) {
             return;
         }
 
-        config.onSubmit();
+        config.onSubmit(entity as T);
     };
 
     useEffect(() => {
