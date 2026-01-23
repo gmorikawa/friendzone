@@ -22,7 +22,7 @@ describe("JwtTokenGenerator", () => {
 
     describe("generate token", () => {
         it("should return a string different from the original input", async () => {
-            token = await tokenGenerator.issue<UserPayload>(user, secretKey, 3600000);
+            token = await tokenGenerator.issue<UserPayload>("test", user, secretKey, 3600000);
 
             expect(token).not.toBe(user);
         });
@@ -30,12 +30,16 @@ describe("JwtTokenGenerator", () => {
 
     describe("verify token", () => {
         it("should return the payload", async () => {
-            const payload = await tokenGenerator.verify<UserPayload>(token, secretKey);
+            const payload = await tokenGenerator.verify<UserPayload>("test", token, secretKey);
 
             expect(payload).toHaveProperty("id", user.id);
             expect(payload).toHaveProperty("email", user.email);
             expect(payload.name).toHaveProperty("first", user.name.first);
             expect(payload.name).toHaveProperty("last", user.name.last);
+        });
+
+        it("should throw an error for invalid context", async () => {
+            await expect(tokenGenerator.verify<UserPayload>("invalid_context", token, secretKey)).rejects.toThrow("Invalid token context");
         });
     });
 });

@@ -3,6 +3,7 @@ import { HydratedDocument } from "mongoose";
 import { Prop, raw, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import type { Name } from "./interfaces/name.interface";
+import { UserStatus } from "./enums/status.enum";
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -20,6 +21,13 @@ export type UserDocument = HydratedDocument<User>;
 export class User {
     @Prop()
     id: string;
+
+    @Prop({
+        type: String,
+        enum: UserStatus,
+        default: UserStatus.INACTIVE,
+    })
+    status: UserStatus;
 
     @Prop(raw({
         first: {

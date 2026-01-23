@@ -4,6 +4,8 @@ import { AuthService } from "../auth.service";
 import { MockUserService } from "./mocks/user.service";
 import { UserService } from "../../../modules/user/user.service";
 import { CreateUserDTO } from "../../../modules/user/dtos/create-user.dto";
+import { JwtTokenGenerator } from "../../../common/token-generator/jwt.token-generator";
+import { MockTokenGenerator } from "./mocks/token-generator.mock";
 
 describe("AuthService", () => {
     let service: AuthService;
@@ -17,6 +19,14 @@ describe("AuthService", () => {
                 {
                     provide: UserService,
                     useClass: MockUserService,
+                },
+                {
+                    provide: "TokenGenerator",
+                    useClass: MockTokenGenerator
+                },
+                {
+                    provide: "MailSender",
+                    useValue: { send: async (to: string, subject: string, body: string) => Promise.resolve()},
                 }
             ],
         }).compile();

@@ -42,4 +42,8 @@ export class UserService {
     public async checkPassword(password: PlainPassword, hashedPassword: HashedPassword): Promise<boolean> {
         return this.passwordHasher.compare(password, hashedPassword);
     }
+
+    public async activateUser(id: string): Promise<UserDocument | null> {
+        return this.model.findByIdAndUpdate(id, { status: "ACTIVE" }, { returnDocument: "after" });
+    }
 }

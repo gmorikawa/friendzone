@@ -1,3 +1,4 @@
+import { UserStatus } from "../../enums/status.enum";
 import { User } from "../../user.schema";
 
 export class UserModel {
@@ -6,6 +7,20 @@ export class UserModel {
 
     constructor(createUser: User) {
         this.entity = createUser;
+    }
+
+    static async findByIdAndUpdate(id: string, update: Partial<User>): Promise<User | null> {
+        const userIndex = UserModel.users.findIndex((user) => user.id === id);
+        if (userIndex === -1) {
+            return null;
+        }
+
+        UserModel.users[userIndex] = {
+            ...UserModel.users[userIndex],
+            ...update,
+        };
+
+        return UserModel.users[userIndex];
     }
 
     static async findOne({ email }: { email: string }): Promise<User | null> {
@@ -17,6 +32,8 @@ export class UserModel {
     }
 
     async save(): Promise<User> {
+        this.entity.id = (UserModel.users.length + 1).toString();
+        this.entity.status = UserStatus.INACTIVE;
         UserModel.users.push(this.entity);
 
         return this.entity;

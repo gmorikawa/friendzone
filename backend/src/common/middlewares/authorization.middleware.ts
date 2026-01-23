@@ -40,7 +40,7 @@ export class LoggerMiddleware implements NestMiddleware {
 
         const secretKey = process.env.JWT_SECRET_KEY as string;
 
-        this.tokenGenerator.verify<LoggedUser>(token, secretKey)
+        this.tokenGenerator.verify<LoggedUser>("authentication", token, secretKey)
             .then((loggedUser: LoggedUser) => {
                 req.user = loggedUser;
                 next();

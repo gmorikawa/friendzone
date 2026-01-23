@@ -3,19 +3,55 @@ import { UserService } from "../user/user.service";
 import { CreateUserDTO } from "../user/dtos/create-user.dto";
 import { UserDocument } from "../user/user.schema";
 import { UserSession } from "./interfaces/user-session.interface";
-import { AuthenticationError } from "./auth.errors";
+import { AuthenticationError, InvalidConfirmationToken } from "./auth.errors";
 import type { TokenGenerator } from "./interfaces/token.interface";
 import { LoggedUser } from "../user/interfaces/logged-user.interface";
+import type { MailSender } from "../../common/mail-sender/interfaces/mail-sender.interface";
 
 @Injectable()
 export class AuthService {
     constructor(
         private userService: UserService,
-        @Inject("TokenGenerator") private tokenGenerator: TokenGenerator
+        @Inject("TokenGenerator") private tokenGenerator: TokenGenerator,
+        @Inject("MailSender") private mailSender: MailSender,
     ) { }
 
     public async signUp(createUser: CreateUserDTO): Promise<UserDocument> {
-        return this.userService.create(createUser);
+        const user = await this.userService.create(createUser);
+
+        const secretKey = process.env.JWT_SECRET_KEY as string;
+        const expiresIn = 1000 * 60 * 60 * 24 * 7;
+
+        const loggedUser: LoggedUser = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+        }
+
+        const token = await this.tokenGenerator.issue<LoggedUser>("confirm_email", loggedUser, secretKey, expiresIn);
+
+        await this.mailSender.send(
+            user.email,
+            "Activate your account!",
+            `Hello ${user.name.first},\n\nThank you for signing up! We're excited to have you on board.\nToken: ${token}\n\nBest regards,\nThe Team`
+        );
+
+        return user;
+    }
+
+    public async confirmEmail(token: string): Promise<boolean> {
+        const secretKey = process.env.JWT_SECRET_KEY as string;
+        const payload = await this.tokenGenerator.verify<LoggedUser>("confirm_email", token, secretKey);
+
+        const user = await this.userService.findByEmail(payload.email);
+
+        if (!user) {
+            throw new InvalidConfirmationToken();
+        }
+
+        await this.userService.activateUser(user.id);
+
+        return true;
     }
 
     public async logIn(email: string, password: string): Promise<UserSession> {
@@ -40,6 +76,7 @@ export class AuthService {
         const expiresIn = 1000 * 60 * 60 * 24 * 7;
 
         const token = await this.tokenGenerator.issue<LoggedUser>(
+            "authentication",
             loggedUser,
             secretKey,
             expiresIn

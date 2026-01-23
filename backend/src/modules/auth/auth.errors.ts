@@ -11,3 +11,10 @@ export class UnauthorizedAccessError extends Error {
         this.name = "UnauthorizedAccessError";
     }
 }
+
+export class InvalidConfirmationToken extends Error {
+    constructor() {
+        super("The confirmation token is invalid or has expired.");
+        this.name = "InvalidConfirmationToken";
+    }
+}
