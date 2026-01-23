@@ -13,7 +13,6 @@ export type UserDocument = HydratedDocument<User>;
         versionKey: false,
         transform: (_doc, ret: Record<string, any>) => {
             delete ret._id;
-            delete ret.password;
         },
     },
     collection: "users",
@@ -45,7 +44,6 @@ export class User {
 
     @Prop({
         required: true,
-        select: false,
     })
     password: string;
 
