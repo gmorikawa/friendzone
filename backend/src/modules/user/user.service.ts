@@ -3,9 +3,9 @@ import { Model } from "mongoose";
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { User } from "./user.schema";
+import { User, UserDocument } from "./user.schema";
 import { CreateUserDTO } from "./dtos/create-user.dto";
-import type { HashedPassword, PasswordHasher, PlainPassword } from "src/common/password-hasher/interfaces/password-hasher.interface";
+import type { HashedPassword, PasswordHasher, PlainPassword } from "../../common/password-hasher/interfaces/password-hasher.interface";
 import { EmailAlreadyExistsError } from "./user.errors";
 
 @Injectable()
@@ -23,7 +23,7 @@ export class UserService {
         return this.model.find();
     }
 
-    public async create(createUser: CreateUserDTO): Promise<User> {
+    public async create(createUser: CreateUserDTO): Promise<UserDocument> {
         const existingUser = await this.findByEmail(createUser.email);
 
         if (existingUser) {
@@ -36,8 +36,7 @@ export class UserService {
             password: await this.passwordHasher.hash(createUser.password),
         });
 
-        return createdUser.save()
-            .then(user => user.toJSON());
+        return createdUser.save();
     }
 
     public async checkPassword(password: PlainPassword, hashedPassword: HashedPassword): Promise<boolean> {

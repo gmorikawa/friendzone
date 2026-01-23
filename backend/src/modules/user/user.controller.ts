@@ -20,7 +20,8 @@ export class UserController {
     public async create(
         @Body("user") createUser: CreateUserDTO
     ): Promise<User> {
-        return this.service.create(createUser);
+        return this.service.create(createUser)
+            .then((user) => user.toJSON());
     }
 
 }
