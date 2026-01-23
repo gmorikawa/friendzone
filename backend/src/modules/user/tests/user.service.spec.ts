@@ -4,7 +4,7 @@ import { getModelToken } from "@nestjs/mongoose";
 import { UserService } from "../user.service";
 import { User } from "../user.schema";
 import { EmailAlreadyExistsError } from "../user.errors";
-import type { PasswordHasher } from "../../../common/password-hasher/interfaces/password-hasher.interface";
+import type { PasswordHasher } from "../interfaces/password-hasher.interface";
 import { BcryptPasswordHasher } from "../../../common/password-hasher/bcrypt.password-hasher";
 import { UserModel } from "./mocks/user.model";
 

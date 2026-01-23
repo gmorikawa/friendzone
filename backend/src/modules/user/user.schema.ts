@@ -19,6 +19,9 @@ export type UserDocument = HydratedDocument<User>;
     collection: "users",
 })
 export class User {
+    @Prop()
+    id: string;
+
     @Prop(raw({
         first: {
             type: String,

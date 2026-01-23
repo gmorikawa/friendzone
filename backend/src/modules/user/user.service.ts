@@ -5,7 +5,7 @@ import { InjectModel } from "@nestjs/mongoose";
 
 import { User, UserDocument } from "./user.schema";
 import { CreateUserDTO } from "./dtos/create-user.dto";
-import type { HashedPassword, PasswordHasher, PlainPassword } from "../../common/password-hasher/interfaces/password-hasher.interface";
+import type { HashedPassword, PasswordHasher, PlainPassword } from "./interfaces/password-hasher.interface";
 import { EmailAlreadyExistsError } from "./user.errors";
 
 @Injectable()

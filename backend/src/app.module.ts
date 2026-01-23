@@ -1,29 +1,33 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
+import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
+
 import { UserModule } from "./modules/user/user.module";
-import { AuthController } from './modules/auth/auth.controller';
-import { AuthService } from './modules/auth/auth.service';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         MongooseModule.forRoot(process.env.MONGO_URI ?? ""),
-        UserModule,
         AuthModule,
+        UserModule,
     ],
     controllers: [
-        AppController,
-        AuthController,
+        AppController
     ],
     providers: [
-        AppService,
-        AuthService,
+        AppService
     ],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(LoggerMiddleware)
+            .forRoutes("*");
+    }
+}
