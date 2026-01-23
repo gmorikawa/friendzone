@@ -1,20 +1,31 @@
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import { Environment } from "@/config/environment";
 
-import type { SignInUser } from "@/features/auth/types/sign-in-user";
+import type { SignUpUser } from "@/features/auth/types/sign-up-user";
 import type { CreateUser } from "@/features/user/types/create-user";
+import type { LogInCredentials } from "@/features/auth/types/log-in-credentials";
+import type { Session } from "@/features/auth/types/session";
 
-export function createUser(signInData: SignInUser) {
+export async function signUp(signUpData: SignUpUser) {
     const body: { user: CreateUser } = {
         user: {
             name: {
-                first: signInData.firstName,
-                last: signInData.lastName
+                first: signUpData.firstName,
+                last: signUpData.lastName
             },
-            email: signInData.email,
-            password: signInData.password
+            email: signUpData.email,
+            password: signUpData.password
         }
     };
 
     return axios.post(`${Environment.API_URL}/auth/sign-up`, body);
+}
+
+export async function logIn(logInData: LogInCredentials): Promise<Session> {
+    const body = logInData;
+
+    return axios.post(`${Environment.API_URL}/auth/log-in`, body)
+        .then((response: AxiosResponse) => {
+            return response.data;
+        });
 }

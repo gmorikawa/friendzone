@@ -2,7 +2,7 @@ import z from "zod";
 
 import type { ValidationResult } from "@/shared/form/types/validation-result";
 
-export function validator<Data>(schema: z.ZodSchema<Data>, data: Partial<Data>): ValidationResult {
+export function validateData<Data>(schema: z.ZodSchema<Data>, data: Partial<Data>): ValidationResult {
     const result = schema.safeParse(data);
 
     if (result.success) {

@@ -10,26 +10,35 @@ import { TextField } from "@/components/inputs/text-field";
 import { Title } from "@/components/typography/title";
 import { useForm } from "@/components/inputs/form-controller";
 
-import type { SignInUser } from "@/features/auth/types/sign-in-user";
-import { validateSignInData } from "@/features/auth/utils/validation";
-import { createUser } from "@/features/auth/utils/api";
+import type { LogInCredentials } from "@/features/auth/types/log-in-credentials";
+import { validateLogInData } from "@/features/auth/utils/validation";
+import { logIn } from "@/features/auth/utils/api";
+import { useSession } from "@/features/auth/hooks/session";
+import type { Session } from "../types/session";
 
-export function SignInPage() {
+export function LogInPage() {
     const navigate = useNavigate();
+    const session = useSession();
 
     const form = useForm({
         defaultValues: {
-            firstName: "",
-            lastName: "",
             email: "",
             password: "",
-            confirmPassword: "",
         },
-        validate: validateSignInData,
-        onSubmit: (data: SignInUser) => {
-            createUser(data)
-                .then(() => {
-                    navigate.to("/auth/login");
+        validate: validateLogInData,
+        onSubmit: (data: LogInCredentials) => {
+            logIn(data)
+                .then(({ token, loggedUser }: Session) => {
+                    if (!loggedUser) {
+                        throw new Error("Logged user data is missing");
+                    }
+
+                    if (!token) {
+                        throw new Error("Token data is missing");
+                    }
+
+                    session.update(token, loggedUser);
+                    navigate.to("/app/user");
                 })
                 .catch((error: Error) => {
                     console.error("Error creating user:", error);
@@ -48,27 +57,11 @@ export function SignInPage() {
                     marginBottom: 4,
                 }}
             >
-                Sign In
+                Log In
             </Title>
 
             <Form controller={form}>
                 <Stack spacing={2}>
-                    <TextField
-                        label="First Name"
-                        value={form.entity.firstName}
-                        onChange={(newValue: string) => form.handleChange("firstName", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("firstName", newValue)}
-                        error={form.getError("firstName")}
-                    />
-
-                    <TextField
-                        label="Last Name"
-                        value={form.entity.lastName}
-                        onChange={(newValue: string) => form.handleChange("lastName", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("lastName", newValue)}
-                        error={form.getError("lastName")}
-                    />
-
                     <TextField
                         label="Email Address"
                         value={form.entity.email}
@@ -85,16 +78,8 @@ export function SignInPage() {
                         error={form.getError("password")}
                     />
 
-                    <PasswordField
-                        label="Confirm Password"
-                        value={form.entity.confirmPassword}
-                        onChange={(newValue: string) => form.handleChange("confirmPassword", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("confirmPassword", newValue)}
-                        error={form.getError("confirmPassword")}
-                    />
-
                     <Button variant="outlined" type="submit">
-                        Confirm
+                        Log In
                     </Button>
                 </Stack>
             </Form>
