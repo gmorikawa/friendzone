@@ -39,7 +39,7 @@ export function LogInPage() {
                     }
 
                     session.update(token, loggedUser);
-                    navigate.to("/app/user");
+                    navigate.to("/app/users");
                 })
                 .catch((error: Error) => {
                     console.error("Error logging in:", error);

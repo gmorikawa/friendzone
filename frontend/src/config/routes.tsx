@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 
-import { AuthLayout } from "@/shared/layout/auth";
 import { BaseLayout } from "@/shared/layout/base";
+import { AuthLayout } from "@/shared/layout/auth";
+import { AppLayout } from "@/shared/layout/app";
 
 import { SignUpPage } from "@/features/auth/pages/sign-up";
 import { LogInPage } from "@/features/auth/pages/log-in";
@@ -9,9 +10,9 @@ import { ConfirmEmailPage } from "@/features/auth/pages/confirm-email";
 import { PasswordResetPage } from "@/features/auth/pages/password-reset";
 import { PasswordResetConfirmationPage } from "@/features/auth/pages/password-reset-confirmation";
 import { PasswordRecoveryPage } from "@/features/auth/pages/password-recovery";
+import { PasswordRecoveryConfirmationPage } from "@/features/auth/pages/password-recovery-confirmation";
 
 import { UserListPage } from "@/features/user/pages/list";
-import { PasswordRecoveryConfirmationPage } from "@/features/auth/pages/password-recovery-confirmation";
 
 export function RouteProvider() {
     return (
@@ -31,8 +32,8 @@ export function RouteProvider() {
                         <Route path="password-recovery/confirmation" element={<PasswordRecoveryConfirmationPage />} />
                     </Route>
 
-                    <Route path="app">
-                        <Route path="user" element={<UserListPage />} />
+                    <Route path="app" element={<AppLayout />}>
+                        <Route path="users" element={<UserListPage />} />
                     </Route>
                 </Route>
             </Routes>
