@@ -5,16 +5,17 @@ import { Button } from "@/components/inputs/button";
 import { Container } from "@/components/containers/container";
 import { Form } from "@/components/inputs/form";
 import { PasswordField } from "@/components/inputs/password-field";
+import { RoutingLink } from "@/components/navigation/routing-link";
 import { Stack } from "@/components/containers/stack";
 import { TextField } from "@/components/inputs/text-field";
 import { Title } from "@/components/typography/title";
 import { useForm } from "@/components/inputs/form-controller";
 
 import type { LogInCredentials } from "@/features/auth/types/log-in-credentials";
+import type { Session } from "@/features/auth/types/session";
 import { validateLogInData } from "@/features/auth/utils/validation";
 import { logIn } from "@/features/auth/utils/api";
 import { useSession } from "@/features/auth/hooks/session";
-import type { Session } from "../types/session";
 
 export function LogInPage() {
     const navigate = useNavigate();
@@ -41,7 +42,7 @@ export function LogInPage() {
                     navigate.to("/app/user");
                 })
                 .catch((error: Error) => {
-                    console.error("Error creating user:", error);
+                    console.error("Error logging in:", error);
                 });
         },
     });
@@ -78,9 +79,23 @@ export function LogInPage() {
                         error={form.getError("password")}
                     />
 
-                    <Button variant="outlined" type="submit">
+                    <Button variant="contained" type="submit">
                         Log In
                     </Button>
+
+                    <Stack spacing={1}>
+                        <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
+                            <RoutingLink src="/auth/sign-up">
+                                Do not have an account? Sign Up
+                            </RoutingLink>
+                        </Container>
+
+                        <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
+                            <RoutingLink src="/auth/password-reset">
+                                Forgot your password? Reset Password
+                            </RoutingLink>
+                        </Container>
+                    </Stack>
                 </Stack>
             </Form>
         </Container>

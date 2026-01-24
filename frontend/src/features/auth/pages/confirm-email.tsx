@@ -2,24 +2,29 @@ import { useEffect, useState } from "react";
 
 import { Logo } from "@/shared/logo";
 import { useQuery } from "@/shared/router/hooks/query";
+import { useNavigate } from "@/shared/router/hooks/navigate";
 
 import { Container } from "@/components/containers/container";
 import { Paragraph } from "@/components/typography/paragraph";
 import { Title } from "@/components/typography/title";
 
 import { confirmEmail } from "@/features/auth/utils/api";
+import { Button } from "@/components/inputs/button";
 
 type QueryWithToken = { token: string; }
 type ConfirmationEmailStatus = "pending" | "confirmed" | "failed";
 
 export function ConfirmEmailPage() {
+    const navigate = useNavigate();
     const { token } = useQuery<QueryWithToken>();
     const [status, setStatus] = useState<ConfirmationEmailStatus>("pending");
 
+    const handleReturnToLogin = () => {
+        navigate.to("/auth/log-in");
+    };
+
     useEffect(() => {
         if (token) {
-            console.log("Confirming email with token:", token);
-
             confirmEmail(token)
                 .then((result: boolean) => {
                     if (result) {
@@ -50,6 +55,10 @@ export function ConfirmEmailPage() {
                 {status === "confirmed" && "Your email has been successfully confirmed. You can now log in to your account."}
                 {status === "failed" && "Email confirmation failed. The token may be invalid or expired."}
             </Paragraph>
+
+            <Button variant="contained" type="button" onClick={handleReturnToLogin}>
+                Return to Log In
+            </Button>
         </Container>
     );
 }

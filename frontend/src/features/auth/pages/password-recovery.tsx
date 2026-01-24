@@ -1,5 +1,6 @@
 import { Logo } from "@/shared/logo";
 import { useNavigate } from "@/shared/router/hooks/navigate";
+import { useQuery } from "@/shared/router/hooks/query";
 
 import { Button } from "@/components/inputs/button";
 import { Container } from "@/components/containers/container";
@@ -7,33 +8,32 @@ import { Form } from "@/components/inputs/form";
 import { PasswordField } from "@/components/inputs/password-field";
 import { RoutingLink } from "@/components/navigation/routing-link";
 import { Stack } from "@/components/containers/stack";
-import { TextField } from "@/components/inputs/text-field";
 import { Title } from "@/components/typography/title";
 import { useForm } from "@/components/inputs/form-controller";
 
-import type { SignUpUser } from "@/features/auth/types/sign-up-user";
-import { validateSignInData } from "@/features/auth/utils/validation";
-import { signUp } from "@/features/auth/utils/api";
+import type { PasswordRecovery } from "@/features/auth/types/password-recovery";
+import { validatePasswordRecoveryData } from "@/features/auth/utils/validation";
+import { resetPassword } from "@/features/auth/utils/api";
 
-export function SignUpPage() {
+type QueryWithToken = { token: string; }
+
+export function PasswordRecoveryPage() {
+    const { token } = useQuery<QueryWithToken>();
     const navigate = useNavigate();
 
-    const form = useForm({
+    const form = useForm<PasswordRecovery>({
         defaultValues: {
-            firstName: "",
-            lastName: "",
-            email: "",
             password: "",
             confirmPassword: "",
         },
-        validate: validateSignInData,
-        onSubmit: (data: SignUpUser) => {
-            signUp(data)
+        validate: validatePasswordRecoveryData,
+        onSubmit: (data: PasswordRecovery) => {
+            resetPassword(token, data)
                 .then(() => {
-                    navigate.to("/auth/log-in");
+                    navigate.to("/auth/password-recovery/confirmation");
                 })
                 .catch((error: Error) => {
-                    console.error("Error creating user:", error);
+                    console.error("Error resetting password:", error);
                 });
         },
     });
@@ -49,35 +49,11 @@ export function SignUpPage() {
                     marginBottom: 4,
                 }}
             >
-                Sign In
+                Recover Password
             </Title>
 
             <Form controller={form}>
                 <Stack spacing={2}>
-                    <TextField
-                        label="First Name"
-                        value={form.entity.firstName}
-                        onChange={(newValue: string) => form.handleChange("firstName", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("firstName", newValue)}
-                        error={form.getError("firstName")}
-                    />
-
-                    <TextField
-                        label="Last Name"
-                        value={form.entity.lastName}
-                        onChange={(newValue: string) => form.handleChange("lastName", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("lastName", newValue)}
-                        error={form.getError("lastName")}
-                    />
-
-                    <TextField
-                        label="Email Address"
-                        value={form.entity.email}
-                        onChange={(newValue: string) => form.handleChange("email", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("email", newValue)}
-                        error={form.getError("email")}
-                    />
-
                     <PasswordField
                         label="Password"
                         value={form.entity.password}
@@ -95,7 +71,7 @@ export function SignUpPage() {
                     />
 
                     <Button variant="contained" type="submit">
-                        Confirm
+                        Reset Password
                     </Button>
 
                     <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
