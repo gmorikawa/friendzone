@@ -39,6 +39,7 @@ export function AppLayout() {
                         sx={{
                             flexGrow: 1,
                             padding: 2,
+                            overflowX: "auto",
                         }}
                     >
                         <Outlet />
