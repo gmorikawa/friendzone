@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { CreateUserDTO } from "../user/dtos/create-user.dto";
-import { UserDocument } from "../user/user.schema";
+import { User, UserDocument } from "../user/user.schema";
 import { UserSession } from "./interfaces/user-session.interface";
 import { AuthenticationError, InvalidConfirmationToken } from "./auth.errors";
 import type { TokenGenerator } from "./interfaces/token.interface";
@@ -19,22 +19,7 @@ export class AuthService {
     public async signUp(createUser: CreateUserDTO): Promise<UserDocument> {
         const user = await this.userService.create(createUser);
 
-        const secretKey = process.env.JWT_SECRET_KEY as string;
-        const expiresIn = 1000 * 60 * 60 * 24 * 7;
-
-        const loggedUser: LoggedUser = {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-        }
-
-        const token = await this.tokenGenerator.issue<LoggedUser>("confirm_email", loggedUser, secretKey, expiresIn);
-
-        await this.mailSender.send(
-            user.email,
-            "Activate your account!",
-            `Hello ${user.name.first},\n\nThank you for signing up! We're excited to have you on board.\nToken: ${token}\n\nBest regards,\nThe Team`
-        );
+        this.sendConfirmationEmail(user);
 
         return user;
     }
@@ -83,5 +68,31 @@ export class AuthService {
         );
 
         return { loggedUser, token};
+    }
+
+    private async sendConfirmationEmail(user: User): Promise<void> {
+        const secretKey = process.env.JWT_SECRET_KEY as string;
+        const expiresIn = 1000 * 60 * 60 * 24 * 7;
+
+        const loggedUser: LoggedUser = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+        }
+
+        const token = await this.tokenGenerator.issue<LoggedUser>("confirm_email", loggedUser, secretKey, expiresIn);
+        const frontendUrl = process.env.FRONTEND_URL as string;
+        const confirmationLink = `${frontendUrl}/auth/confirm-email?token=${token}`;
+
+        return this.mailSender.send(
+            user.email,
+            "Activate your account!",
+            `Hello ${user.name.first},<br><br>` +
+                `Thank you for signing up! We're excited to have you on board.<br>` +
+                `Please confirm your email by clicking the following link: <br><br>
+                <a href="${confirmationLink}">${confirmationLink}</a><br><br>` +
+                `Best regards,<br>` +
+                `The Team`
+        );
     }
 }
