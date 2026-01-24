@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 
 import { AuthLayout } from "@/shared/layout/auth";
 import { BaseLayout } from "@/shared/layout/base";
@@ -18,7 +18,10 @@ export function RouteProvider() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<BaseLayout />}>
+                    <Route index element={<Navigate to="/auth/log-in" replace />} />
+
                     <Route path="auth" element={<AuthLayout />}>
+                        <Route index element={<Navigate to="/auth/log-in" replace />} />
                         <Route path="sign-up" element={<SignUpPage />} />
                         <Route path="log-in" element={<LogInPage />} />
                         <Route path="confirm-email" element={<ConfirmEmailPage />} />
