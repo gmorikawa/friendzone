@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { CreateUserDTO } from "../user/dtos/create-user.dto";
-import { User, UserDocument } from "../user/user.schema";
+import { UserDocument } from "../user/user.schema";
 import { UserSession } from "./interfaces/user-session.interface";
 import { AuthenticationError, InvalidConfirmationToken } from "./auth.errors";
 import type { TokenGenerator } from "./interfaces/token.interface";
@@ -28,15 +28,14 @@ export class AuthService {
         const secretKey = process.env.JWT_SECRET_KEY as string;
         const payload = await this.tokenGenerator.verify<LoggedUser>("confirm_email", token, secretKey);
 
-        const user = await this.userService.findByEmail(payload.email);
+        const user = await this.userService.findById(payload.id);
 
         if (!user) {
             throw new InvalidConfirmationToken();
         }
 
-        await this.userService.activateUser(user.id);
-
-        return true;
+        return this.userService.activateUser(user.id)
+            .then(() => true);
     }
 
     public async logIn(email: string, password: string): Promise<UserSession> {
@@ -70,15 +69,15 @@ export class AuthService {
         return { loggedUser, token};
     }
 
-    private async sendConfirmationEmail(user: User): Promise<void> {
+    private async sendConfirmationEmail(user: UserDocument): Promise<void> {
         const secretKey = process.env.JWT_SECRET_KEY as string;
         const expiresIn = 1000 * 60 * 60 * 24 * 7;
 
         const loggedUser: LoggedUser = {
-            id: user.id,
+            id: user._id?.toString(),
             name: user.name,
             email: user.email,
-        }
+        };
 
         const token = await this.tokenGenerator.issue<LoggedUser>("confirm_email", loggedUser, secretKey, expiresIn);
         const frontendUrl = process.env.FRONTEND_URL as string;
