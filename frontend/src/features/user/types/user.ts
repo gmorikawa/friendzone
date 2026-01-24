@@ -5,6 +5,7 @@ export interface User {
     name: Name;
     email: string;
     status: "active" | "inactive" | "banned";
+    biography?: string;
 
     createdAt: Date;
     updatedAt: Date;

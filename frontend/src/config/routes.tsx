@@ -13,6 +13,7 @@ import { PasswordRecoveryPage } from "@/features/auth/pages/password-recovery";
 import { PasswordRecoveryConfirmationPage } from "@/features/auth/pages/password-recovery-confirmation";
 
 import { UserListPage } from "@/features/user/pages/list";
+import { UserProfile } from "@/features/user/pages/profile";
 
 export function RouteProvider() {
     return (
@@ -34,6 +35,7 @@ export function RouteProvider() {
 
                     <Route path="app" element={<AppLayout />}>
                         <Route path="users" element={<UserListPage />} />
+                        <Route path="profile/:id" element={<UserProfile />} />
                     </Route>
                 </Route>
             </Routes>

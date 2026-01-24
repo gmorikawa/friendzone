@@ -47,7 +47,7 @@ export function AppMenu() {
 
             <Container>
                 <List>
-                    <ListItem label="Profile" icon={<ProfileIcon />} context="/app/profile" onClick={handleNavigate} />
+                    <ListItem label="Profile" icon={<ProfileIcon />} context={`/app/profile/${session.loggedUser?.id}`} onClick={handleNavigate} />
                     <ListItem label="Logout" icon={<LogoutIcon />} onClick={handleLogout} />
                 </List>
             </Container>
