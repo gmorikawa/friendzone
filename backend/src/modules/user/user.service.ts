@@ -6,7 +6,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { User, UserDocument } from "./user.schema";
 import { CreateUserDTO } from "./dtos/create-user.dto";
 import type { HashedPassword, PasswordHasher, PlainPassword } from "./interfaces/password-hasher.interface";
-import { EmailAlreadyExistsError } from "./user.errors";
+import { EmailAlreadyExistsError, UserNotFoundError } from "./user.errors";
 
 @Injectable()
 export class UserService {
@@ -15,12 +15,18 @@ export class UserService {
         @Inject("PasswordHasher") private passwordHasher: PasswordHasher,
     ) { }
 
-    public async findByEmail(email: string): Promise<User | null> {
+    public async findByEmail(email: string): Promise<UserDocument | null> {
         return this.model.findOne({ email });
     }
 
-    public async findAll(): Promise<User[]> {
+    public async findAll(): Promise<UserDocument[]> {
         return this.model.find();
+    }
+
+    public async findById(id: string): Promise<UserDocument | null> {
+        const user = await this.model.findById(id);
+
+        return user;
     }
 
     public async create(createUser: CreateUserDTO): Promise<UserDocument> {

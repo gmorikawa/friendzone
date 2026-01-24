@@ -9,6 +9,10 @@ export class UserModel {
         this.entity = createUser;
     }
 
+    static async findById(id: string): Promise<User | null> {
+        return UserModel.users.find((user) => user.id === id) ?? null;
+    }
+
     static async findByIdAndUpdate(id: string, update: Partial<User>): Promise<User | null> {
         const userIndex = UserModel.users.findIndex((user) => user.id === id);
         if (userIndex === -1) {
@@ -31,11 +35,19 @@ export class UserModel {
         return UserModel.users;
     }
 
+    static async reset(): Promise<void> {
+        UserModel.users = [];
+    }
+
     async save(): Promise<User> {
         this.entity.id = (UserModel.users.length + 1).toString();
         this.entity.status = UserStatus.INACTIVE;
         UserModel.users.push(this.entity);
 
+        return this.entity;
+    }
+
+    toJSON(): User {
         return this.entity;
     }
 }

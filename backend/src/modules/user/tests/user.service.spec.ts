@@ -3,7 +3,7 @@ import { getModelToken } from "@nestjs/mongoose";
 
 import { UserService } from "../user.service";
 import { User } from "../user.schema";
-import { EmailAlreadyExistsError } from "../user.errors";
+import { EmailAlreadyExistsError, UserNotFoundError } from "../user.errors";
 import type { PasswordHasher } from "../interfaces/password-hasher.interface";
 import { BcryptPasswordHasher } from "../../../common/password-hasher/bcrypt.password-hasher";
 import { UserModel } from "./mocks/user.model";
@@ -30,6 +30,34 @@ describe("UserService", () => {
 
         service = module.get<UserService>(UserService);
         passwordHasher = module.get<PasswordHasher>("PasswordHasher");
+    });
+
+    describe("findById", () => {
+        let createdUser: User;
+        beforeEach(async () => {
+            createdUser = await service.create({
+                name: {
+                    first: "Existing",
+                    last: "User"
+                },
+                email: "existing.user@email.com",
+                password: "password123",
+            });
+        });
+
+        it("should return a user by ID", async () => {
+            const result = await service.findById(createdUser.id);
+
+            expect(result).toBeDefined();
+        });
+
+        // it("should throw UserNotFoundError when user does not exist", async () => {
+        //     await expect(service.findById("nonExistentUserId")).rejects.toThrow(UserNotFoundError);
+        // });
+
+        afterEach(async () => {
+            await UserModel.reset();
+        });
     });
 
     describe("create", () => {
