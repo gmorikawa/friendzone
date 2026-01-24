@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
 
 import type { CreateUserDTO } from "./dtos/create-user.dto";
+import type { UpdateUserDTO } from "./dtos/update-user.dto";
 import { User, UserDocument } from "./user.schema";
 import { UserService } from "./user.service";
 import { UserNotFoundError } from "./user.errors";
@@ -38,6 +39,21 @@ export class UserController {
     ): Promise<User> {
         return this.service.create(createUser)
             .then((user) => user.toJSON());
+    }
+
+    @Put(":id")
+    public async update(
+        @Param("id") id: string,
+        @Body() user: UpdateUserDTO
+    ): Promise<User> {
+        return this.service.update(id, user)
+            .then((user: UserDocument | null) => {
+                if (!user) {
+                    throw new UserNotFoundError(id);
+                }
+
+                return user.toJSON();
+            });
     }
 
 }

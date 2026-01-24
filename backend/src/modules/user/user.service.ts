@@ -7,6 +7,7 @@ import { User, UserDocument } from "./user.schema";
 import { CreateUserDTO } from "./dtos/create-user.dto";
 import type { HashedPassword, PasswordHasher, PlainPassword } from "./interfaces/password-hasher.interface";
 import { EmailAlreadyExistsError } from "./user.errors";
+import { UpdateUserDTO } from "./dtos/update-user.dto";
 
 @Injectable()
 export class UserService {
@@ -43,6 +44,31 @@ export class UserService {
         });
 
         return createdUser.save();
+    }
+
+    public async update(id: string, updateUser: UpdateUserDTO): Promise<UserDocument | null> {
+        const user = await this.model.findById(id);
+
+        if (!user) {
+            return null;
+        }
+
+        const validPassword = await this.checkPassword(updateUser.currentPassword, user.password);
+
+        if (!validPassword) {
+            return null;
+        }
+
+        user.email = updateUser.email ?? user.email;
+        user.name.first = updateUser.name?.first ?? user.name.first;
+        user.name.last = updateUser.name?.last ?? user.name.last;
+        user.biography = updateUser.biography ?? user.biography;
+
+        if (updateUser.password && updateUser.password.length > 0 && updateUser.password === updateUser.confirmPassword) {
+            user.password = await this.passwordHasher.hash(updateUser.password);
+        }
+
+        return user.save();
     }
 
     public async changePassword(id: string, newPassord: PlainPassword): Promise<UserDocument | null> {
