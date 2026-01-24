@@ -21,12 +21,7 @@ import { NodemailerMailSender } from "../../common/mail-sender/nodemailer.mail-s
         },
         {
             provide: "MailSender",
-            useValue: new NodemailerMailSender(
-                process.env.SMTP_HOST ?? "",
-                Number(process.env.SMTP_PORT) || 587,
-                process.env.SMTP_USER ?? "",
-                process.env.SMTP_PASS ?? "",
-            )
+            useClass: NodemailerMailSender
         }
     ]
 })

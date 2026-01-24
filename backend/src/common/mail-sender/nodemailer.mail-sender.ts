@@ -8,11 +8,11 @@ export class NodemailerMailSender implements MailSender {
     private user: string;
     private pass: string;
 
-    constructor(host: string, port: number, user: string, pass: string) {
-        this.host = host;
-        this.port = port;
-        this.user = user;
-        this.pass = pass;
+    constructor() {
+        this.host = process.env.MAIL_HOST ?? "";
+        this.port = Number(process.env.MAIL_PORT) || 587;
+        this.user = process.env.MAIL_USER ?? "";
+        this.pass = process.env.MAIL_PASS ?? "";
     }
 
     public async send(to: string, subject: string, body: string): Promise<void> {
