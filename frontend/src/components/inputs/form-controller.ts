@@ -51,10 +51,7 @@ export function useForm<T extends Object>(config: FormConfiguration<T>) {
     };
 
     const handleChange = (field: string, value: any) => {
-        setEntity((previousEntity: Partial<T>) => ({
-            ...previousEntity,
-            [field]: value,
-        }));
+        setEntity((previousEntity: Partial<T>) => setValue(previousEntity, field, value));
     };
 
     const handleBlur = (field: string, value: any) => {
@@ -141,4 +138,26 @@ function substituteValue<T>(obj: Record<string, T>, newValue: T): Record<string,
         }
     }
     return result;
+}
+
+function setValue(entity: any, path: string, value: any) {
+    const keys = path.split(".");
+
+    const modifyField = (partial: any, path: string[], value: any): any => {
+        const key = path[0];
+
+        if (partial[key] && path.length > 1) {
+            return {
+                ...partial,
+                [key]: modifyField(partial[key], path.slice(1), value)
+            };
+        } else {
+            return {
+                ...partial,
+                [key]: value,
+            };
+        }
+    };
+
+    return modifyField(entity, keys, value);
 }
