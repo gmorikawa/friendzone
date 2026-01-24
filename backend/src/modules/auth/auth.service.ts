@@ -5,7 +5,7 @@ import { CreateUserDTO } from "../user/dtos/create-user.dto";
 import { UserDocument } from "../user/user.schema";
 import { UserSession } from "./interfaces/user-session.interface";
 import { AuthenticationError, InvalidConfirmationToken } from "./auth.errors";
-import type { Token, TokenGenerator } from "./interfaces/token.interface";
+import type { SecretKey, Token, TokenGenerator } from "./interfaces/token.interface";
 import { LoggedUser } from "../user/interfaces/logged-user.interface";
 import type { MailSender } from "../../common/mail-sender/interfaces/mail-sender.interface";
 import { TokenContext } from "./enums/token-context";
@@ -27,8 +27,8 @@ export class AuthService {
         return user;
     }
 
-    public async confirmEmail(token: string): Promise<boolean> {
-        const secretKey = process.env.JWT_SECRET_KEY as string;
+    public async confirmEmail(token: Token): Promise<boolean> {
+        const secretKey = process.env.JWT_SECRET_KEY as SecretKey;
         const payload = await this.tokenGenerator.verify<LoggedUser>(TokenContext.CONFIRM_EMAIL, token, secretKey);
 
         const user = await this.userService.findById(payload.id);
@@ -37,7 +37,7 @@ export class AuthService {
             throw new InvalidConfirmationToken();
         }
 
-        return this.userService.activateUser(user.id)
+        return this.userService.activateUser(payload.id)
             .then(() => true);
     }
 
@@ -52,7 +52,7 @@ export class AuthService {
     }
 
     public async resetPassword(token: Token, password: PlainPassword): Promise<boolean> {
-        const secretKey = process.env.JWT_SECRET_KEY as string;
+        const secretKey = process.env.JWT_SECRET_KEY as SecretKey;
         const payload = await this.tokenGenerator.verify<LoggedUser>(TokenContext.RESET_PASSWORD, token, secretKey);
 
         const user = await this.userService.findById(payload.id);
@@ -83,7 +83,7 @@ export class AuthService {
             name: user.name,
             email: user.email,
         };
-        const secretKey = process.env.JWT_SECRET_KEY as string;
+        const secretKey = process.env.JWT_SECRET_KEY as SecretKey;
         const expiresIn = 1000 * 60 * 60 * 24 * 7;
 
         const token = await this.tokenGenerator.issue<LoggedUser>(
@@ -97,7 +97,7 @@ export class AuthService {
     }
 
     private async sendConfirmationEmail(user: UserDocument): Promise<void> {
-        const secretKey = process.env.JWT_SECRET_KEY as string;
+        const secretKey = process.env.JWT_SECRET_KEY as SecretKey;
         const expiresIn = 1000 * 60 * 60 * 24 * 7;
 
         const loggedUser: LoggedUser = {
