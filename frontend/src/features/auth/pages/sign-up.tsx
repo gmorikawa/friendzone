@@ -1,6 +1,8 @@
 import { Logo } from "@/shared/logo";
 import { useNavigate } from "@/shared/router/hooks/navigate";
 
+import { useAlert } from "@/components/feedback/alert";
+import { useForm } from "@/components/inputs/form-controller";
 import { Button } from "@/components/inputs/button";
 import { Container } from "@/components/containers/container";
 import { Form } from "@/components/inputs/form";
@@ -9,13 +11,13 @@ import { RoutingLink } from "@/components/navigation/routing-link";
 import { Stack } from "@/components/containers/stack";
 import { TextField } from "@/components/inputs/text-field";
 import { Title } from "@/components/typography/title";
-import { useForm } from "@/components/inputs/form-controller";
 
 import type { SignUpUser } from "@/features/auth/types/sign-up-user";
 import { validateSignInData } from "@/features/auth/utils/validation";
 import { signUp } from "@/features/auth/utils/api";
 
 export function SignUpPage() {
+    const alert = useAlert();
     const navigate = useNavigate();
 
     const form = useForm({
@@ -32,8 +34,8 @@ export function SignUpPage() {
                 .then(() => {
                     navigate.to("/auth/log-in");
                 })
-                .catch((error: Error) => {
-                    console.error("Error creating user:", error);
+                .catch((_: Error) => {
+                    alert.showErrorMessage("Failed to create account. Please try again later.");
                 });
         },
     });

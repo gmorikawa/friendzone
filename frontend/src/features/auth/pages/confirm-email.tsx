@@ -4,6 +4,7 @@ import { Logo } from "@/shared/logo";
 import { useQuery } from "@/shared/router/hooks/query";
 import { useNavigate } from "@/shared/router/hooks/navigate";
 
+import { useAlert } from "@/components/feedback/alert";
 import { Button } from "@/components/inputs/button";
 import { Container } from "@/components/containers/container";
 import { Paragraph } from "@/components/typography/paragraph";
@@ -16,6 +17,7 @@ type QueryWithToken = { token: string; }
 type ConfirmationEmailStatus = "pending" | "confirmed" | "failed";
 
 export function ConfirmEmailPage() {
+    const alert = useAlert();
     const navigate = useNavigate();
     const { token } = useQuery<QueryWithToken>();
     const [status, setStatus] = useState<ConfirmationEmailStatus>("pending");
@@ -34,6 +36,7 @@ export function ConfirmEmailPage() {
                 })
                 .catch((_: Error) => {
                     setStatus("failed");
+                    alert.showErrorMessage("Email confirmation failed. The token may be invalid or expired.");
                 });
         }
     }, []);

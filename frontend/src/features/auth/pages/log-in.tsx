@@ -10,6 +10,7 @@ import { Stack } from "@/components/containers/stack";
 import { TextField } from "@/components/inputs/text-field";
 import { Title } from "@/components/typography/title";
 import { useForm } from "@/components/inputs/form-controller";
+import { useAlert } from "@/components/feedback/alert";
 
 import type { LogInCredentials } from "@/features/auth/types/log-in-credentials";
 import type { Session } from "@/features/auth/types/session";
@@ -18,6 +19,7 @@ import { logIn } from "@/features/auth/utils/api";
 import { useSession } from "@/features/auth/hooks/session";
 
 export function LogInPage() {
+    const alert = useAlert();
     const navigate = useNavigate();
     const session = useSession();
 
@@ -41,8 +43,8 @@ export function LogInPage() {
                     session.update(token, loggedUser);
                     navigate.to("/app/users");
                 })
-                .catch((error: Error) => {
-                    console.error("Error logging in:", error);
+                .catch((_: Error) => {
+                    alert.showErrorMessage("Failed to log in. Please check your credentials and try again.");
                 });
         },
     });

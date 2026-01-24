@@ -1,4 +1,5 @@
 
+import { useAlert } from "@/components/feedback/alert";
 import { useForm } from "@/components/inputs/form-controller";
 import { Button } from "@/components/inputs/button";
 import { Container } from "@/components/containers/container";
@@ -18,6 +19,7 @@ export interface UserFormProps {
 }
 
 export function UserForm({ user }: UserFormProps) {
+    const alert = useAlert();
     const session = useSession();
 
     const form = useForm<UpdateUser>({
@@ -40,12 +42,16 @@ export function UserForm({ user }: UserFormProps) {
             }
 
             updateUser(session, user.id, validatedData)
-                .then(() => {
-                    console.log("User updated successfully");
+                .then((user: User) => {
+                    alert.showSuccessMessage("User profile updated successfully.");
+                    session.update(session.token, {
+                        id: user.id,
+                        email: user.email,
+                        name: user.name,
+                    });
                 })
-                .catch((error) => {
-                    // Handle error (e.g., show an error message)
-                    console.error("Failed to update user:", error);
+                .catch((_: Error) => {
+                    alert.showErrorMessage("Failed to update user profile.");
                 });
         },
     });

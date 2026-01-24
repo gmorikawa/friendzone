@@ -1,7 +1,8 @@
 import { useState, useEffect, Fragment } from "react";
 
-import useParams from "@/shared/router/hooks/params";
+import { useParams } from "@/shared/router/hooks/params";
 
+import { useAlert } from "@/components/feedback/alert";
 import { Container } from "@/components/containers/container";
 
 import type { User } from "@/features/user/types/user";
@@ -15,6 +16,7 @@ type ParamsWithId = {
 
 export function UserProfile() {
     const { id } = useParams<ParamsWithId>();
+    const alert = useAlert();
     const session = useSession();
     const [user, setUser] = useState<User | null>(null);
 
@@ -23,8 +25,8 @@ export function UserProfile() {
             .then((fetchedUser: User) => {
                 setUser(fetchedUser);
             })
-            .catch((error) => {
-                console.error("Failed to load users:", error);
+            .catch((_: Error) => {
+                alert.showErrorMessage("Failed to load user profile.");
             });
     }, [id]);
     return (

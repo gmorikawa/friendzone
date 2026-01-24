@@ -2,6 +2,8 @@ import { Logo } from "@/shared/logo";
 import { useNavigate } from "@/shared/router/hooks/navigate";
 import { useQuery } from "@/shared/router/hooks/query";
 
+import { useForm } from "@/components/inputs/form-controller";
+import { useAlert } from "@/components/feedback/alert";
 import { Button } from "@/components/inputs/button";
 import { Container } from "@/components/containers/container";
 import { Form } from "@/components/inputs/form";
@@ -9,7 +11,6 @@ import { PasswordField } from "@/components/inputs/password-field";
 import { RoutingLink } from "@/components/navigation/routing-link";
 import { Stack } from "@/components/containers/stack";
 import { Title } from "@/components/typography/title";
-import { useForm } from "@/components/inputs/form-controller";
 
 import type { PasswordRecovery } from "@/features/auth/types/password-recovery";
 import { validatePasswordRecoveryData } from "@/features/auth/utils/validation";
@@ -18,6 +19,7 @@ import { resetPassword } from "@/features/auth/utils/api";
 type QueryWithToken = { token: string; }
 
 export function PasswordRecoveryPage() {
+    const alert = useAlert();
     const { token } = useQuery<QueryWithToken>();
     const navigate = useNavigate();
 
@@ -32,8 +34,8 @@ export function PasswordRecoveryPage() {
                 .then(() => {
                     navigate.to("/auth/password-recovery/confirmation");
                 })
-                .catch((error: Error) => {
-                    console.error("Error resetting password:", error);
+                .catch((_: Error) => {
+                    alert.showErrorMessage("Failed to reset password. The token may be invalid or expired.");
                 });
         },
     });
