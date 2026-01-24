@@ -79,7 +79,7 @@ export class AuthService {
         }
 
         const loggedUser: LoggedUser = {
-            id: user.id,
+            id: user._id?.toString(),
             name: user.name,
             email: user.email,
         };
