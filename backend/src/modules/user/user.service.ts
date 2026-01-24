@@ -6,7 +6,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { User, UserDocument } from "./user.schema";
 import { CreateUserDTO } from "./dtos/create-user.dto";
 import type { HashedPassword, PasswordHasher, PlainPassword } from "./interfaces/password-hasher.interface";
-import { EmailAlreadyExistsError, UserNotFoundError } from "./user.errors";
+import { EmailAlreadyExistsError } from "./user.errors";
 
 @Injectable()
 export class UserService {
@@ -43,6 +43,12 @@ export class UserService {
         });
 
         return createdUser.save();
+    }
+
+    public async changePassword(id: string, newPassord: PlainPassword): Promise<UserDocument | null> {
+        const hashedPassword = await this.passwordHasher.hash(newPassord);
+
+        return this.model.findByIdAndUpdate(id, { password: hashedPassword }, { returnDocument: "after" });
     }
 
     public async checkPassword(password: PlainPassword, hashedPassword: HashedPassword): Promise<boolean> {

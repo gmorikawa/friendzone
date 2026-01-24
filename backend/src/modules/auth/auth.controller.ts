@@ -5,6 +5,7 @@ import type { CreateUserDTO } from "../user/dtos/create-user.dto";
 import { User } from "../user/user.schema";
 import type { UserSession } from "./interfaces/user-session.interface";
 import type { Token } from "./interfaces/token.interface";
+import type { PlainPassword } from "../user/interfaces/password-hasher.interface";
 
 @Controller("auth")
 export class AuthController {
@@ -28,10 +29,25 @@ export class AuthController {
         return this.service.logIn(email, password);
     }
 
+    @Post("password-reset")
+    public async requestPasswordReset(
+        @Body("email") email: string
+    ): Promise<boolean> {
+        return this.service.requestPasswordReset(email);
+    }
+
     @Patch("confirm-email")
     public async confirmEmail(
         @Body("token") token: Token
     ): Promise<boolean> {
         return this.service.confirmEmail(token);
+    }
+
+    @Patch("password-reset")
+    public async resetPassword(
+        @Body("token") token: Token,
+        @Body("password") password: PlainPassword,
+    ): Promise<boolean> {
+        return this.service.resetPassword(token, password);
     }
 }

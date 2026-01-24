@@ -2,12 +2,15 @@ import { Request, Response, NextFunction } from "express";
 
 import { Inject, Injectable, NestMiddleware } from "@nestjs/common";
 import type { TokenGenerator } from "../../modules/auth/interfaces/token.interface";
-import { LoggedUser } from "src/modules/user/interfaces/logged-user.interface";
-import { UnauthorizedAccessError } from "src/modules/auth/auth.errors";
+import { LoggedUser } from "../../modules/user/interfaces/logged-user.interface";
+import { UnauthorizedAccessError } from "../../modules/auth/auth.errors";
+import { TokenContext } from "../../modules/auth/enums/token-context";
 
 const publicPaths = [
     "/api/auth/sign-up",
     "/api/auth/log-in",
+    "/api/auth/confirm-email",
+    "/api/auth/password-reset",
 ];
 
 @Injectable()
@@ -40,7 +43,7 @@ export class LoggerMiddleware implements NestMiddleware {
 
         const secretKey = process.env.JWT_SECRET_KEY as string;
 
-        this.tokenGenerator.verify<LoggedUser>("authentication", token, secretKey)
+        this.tokenGenerator.verify<LoggedUser>(TokenContext.AUTHENTICATION, token, secretKey)
             .then((loggedUser: LoggedUser) => {
                 req.user = loggedUser;
                 next();
