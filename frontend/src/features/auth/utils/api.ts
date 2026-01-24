@@ -29,3 +29,10 @@ export async function logIn(logInData: LogInCredentials): Promise<Session> {
             return response.data;
         });
 }
+
+export async function confirmEmail(token: string): Promise<boolean> {
+    return axios.patch(`${Environment.API_URL}/auth/confirm-email`, { token })
+        .then((response: AxiosResponse) => {
+            return response.data;
+        });
+}
