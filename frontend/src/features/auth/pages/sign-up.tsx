@@ -49,7 +49,7 @@ export function SignUpPage() {
                     marginBottom: 4,
                 }}
             >
-                Sign In
+                Sign Up
             </Title>
 
             <Form controller={form}>
