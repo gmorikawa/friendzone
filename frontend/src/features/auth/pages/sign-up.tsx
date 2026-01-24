@@ -95,7 +95,7 @@ export function SignUpPage() {
                     />
 
                     <Button variant="contained" type="submit">
-                        Confirm
+                        Create Account
                     </Button>
 
                     <Container sx={{ display: "flex", justifyContent: "flex-end" }}>

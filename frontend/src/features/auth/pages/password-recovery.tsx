@@ -71,7 +71,7 @@ export function PasswordRecoveryPage() {
                     />
 
                     <Button variant="contained" type="submit">
-                        Reset Password
+                        Change Password
                     </Button>
 
                     <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
