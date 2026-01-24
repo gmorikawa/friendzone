@@ -4,12 +4,13 @@ import { Logo } from "@/shared/logo";
 import { useQuery } from "@/shared/router/hooks/query";
 import { useNavigate } from "@/shared/router/hooks/navigate";
 
+import { Button } from "@/components/inputs/button";
 import { Container } from "@/components/containers/container";
 import { Paragraph } from "@/components/typography/paragraph";
+import { Stack } from "@/components/containers/stack";
 import { Title } from "@/components/typography/title";
 
 import { confirmEmail } from "@/features/auth/utils/api";
-import { Button } from "@/components/inputs/button";
 
 type QueryWithToken = { token: string; }
 type ConfirmationEmailStatus = "pending" | "confirmed" | "failed";
@@ -50,15 +51,17 @@ export function ConfirmEmailPage() {
                 Confirm Email
             </Title>
 
-            <Paragraph>
-                {status === "pending" && "Confirming your email, please wait..."}
-                {status === "confirmed" && "Your email has been successfully confirmed. You can now log in to your account."}
-                {status === "failed" && "Email confirmation failed. The token may be invalid or expired."}
-            </Paragraph>
+            <Stack spacing={2}>
+                <Paragraph size="small">
+                    {status === "pending" && "Confirming your email, please wait..."}
+                    {status === "confirmed" && "Your email has been successfully confirmed. You can now log in to your account."}
+                    {status === "failed" && "Email confirmation failed. The token may be invalid or expired."}
+                </Paragraph>
 
-            <Button variant="contained" type="button" onClick={handleReturnToLogin}>
-                Return to Log In
-            </Button>
+                <Button variant="contained" type="button" onClick={handleReturnToLogin}>
+                    Return to Log In
+                </Button>
+            </Stack>
         </Container>
     );
 }
