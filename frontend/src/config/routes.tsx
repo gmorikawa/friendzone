@@ -15,6 +15,7 @@ import { PasswordRecoveryConfirmationPage } from "@/features/auth/pages/password
 import { UserListPage } from "@/features/user/pages/list";
 import { UserProfile } from "@/features/user/pages/profile";
 import { PostCreatePage } from "@/features/post/pages/post-create";
+import { PostUpdatePage } from "@/features/post/pages/post-update";
 import { FeedPage } from "@/features/post/pages/feed";
 
 export function RouteProvider() {
@@ -39,6 +40,7 @@ export function RouteProvider() {
                         <Route path="users" element={<UserListPage />} />
                         <Route path="profile/:id" element={<UserProfile />} />
                         <Route path="posts" element={<PostCreatePage />} />
+                        <Route path="posts/:id" element={<PostUpdatePage />} />
                         <Route path="feed" element={<FeedPage />} />
                     </Route>
                 </Route>

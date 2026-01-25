@@ -1,3 +1,6 @@
+export { default as UpdateIcon} from "@mui/icons-material/Edit";
+export { default as DeleteIcon } from "@mui/icons-material/DeleteForever";
+
 export { default as LogoutIcon} from "@mui/icons-material/Logout";
 
 export { default as ProfileIcon} from "@mui/icons-material/AccountCircleOutlined";
