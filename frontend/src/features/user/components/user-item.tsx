@@ -7,9 +7,11 @@ import { buildFullName } from "../utils/name";
 
 export interface UserItemProps {
     user: User;
+
+    hideEmail?: boolean;
 }
 
-export function UserItem({ user }: UserItemProps) {
+export function UserItem({ user, hideEmail }: UserItemProps) {
     return (
         <Container
             sx={{
@@ -27,9 +29,12 @@ export function UserItem({ user }: UserItemProps) {
                 <Paragraph size="large">
                     {buildFullName(user)}
                 </Paragraph>
-                <Paragraph size="small">
-                    {user.email}
-                </Paragraph>
+
+                {!hideEmail && (
+                    <Paragraph size="small">
+                        {user.email}
+                    </Paragraph>
+                )}
             </Container>
         </Container>
     );

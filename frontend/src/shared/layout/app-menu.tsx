@@ -42,6 +42,7 @@ export function AppMenu() {
             <List>
                 <ListItem label="Users" icon={<UsersIcon />} context="/app/users" onClick={handleNavigate} />
                 <ListItem label="Feed" icon={<FeedIcon />} context="/app/feed" onClick={handleNavigate} />
+                <ListItem label="Posts" icon={<FeedIcon />} context="/app/posts" onClick={handleNavigate} />
                 <ListItem label="Friends" icon={<FriendsIcon />} context="/app/friends" onClick={handleNavigate} />
             </List>
 
