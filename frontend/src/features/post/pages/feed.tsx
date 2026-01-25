@@ -7,9 +7,10 @@ import type { Post } from "@/features/post/types/post";
 import { useSession } from "@/features/auth/hooks/session";
 import { useFeed } from "@/features/post/hooks/feed";
 import { PostCard } from "@/features/post/components/post-card";
+import { deletePost } from "@/features/post/utils/api";
 
 export function FeedPage() {
-    
+
     const session = useSession();
     const navigate = useNavigate();
 
@@ -20,14 +21,17 @@ export function FeedPage() {
     };
 
     const handleDelete = (post: Post) => {
-        
+        deletePost(session, post.id)
+            .then(() => {
+                feedController.refresh();
+            });
     };
 
     const canEdit = (post: Post): boolean => {
         return session?.loggedUser?.id === post.createdBy.id;
     };
 
-    
+
     return (
         <Container>
             <Stack spacing={2}>

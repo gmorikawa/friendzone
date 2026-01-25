@@ -84,13 +84,32 @@ export async function updatePost(
         });
 }
 
+export async function deletePost(
+    session: Session,
+    id: string
+): Promise<void> {
+    const url = `${Environment.API_URL}/posts/${id}`;
+
+    return axios.delete(
+        url,
+        {
+            headers: {
+                Authorization: `Bearer ${session.token}`,
+            },
+        }
+    )
+        .then(() => {
+            return;
+        });
+}
+
 export async function addCommentToPost(
     session: Session,
     id: string,
     data: CreateComment
 ): Promise<Post> {
     const url = `${Environment.API_URL}/posts/${id}/comments`;
-    
+
     return axios.patch<Post>(
         url,
         data,

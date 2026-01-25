@@ -9,6 +9,8 @@ import { getPosts } from "@/features/post/utils/api";
 export interface FeedController {
     posts: Post[];
 
+    refresh: () => void;
+
     updatePost: (updatedPost: Post) => void;
 }
 
@@ -27,7 +29,7 @@ export function useFeed(): FeedController {
         );
     };
 
-    useEffect(() => {
+    const refresh = () => {
         getPosts(session)
             .then(((posts: Post[]) => {
                 setPosts(posts);
@@ -35,9 +37,15 @@ export function useFeed(): FeedController {
             .catch((error: Error) => {
                 alert.showErrorMessage("Failed to load posts: " + error.message);
             });
+    };
+
+    useEffect(() => {
+        refresh();
     }, []);
     return {
         posts,
+
+        refresh,
 
         updatePost,
     };
