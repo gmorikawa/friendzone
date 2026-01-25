@@ -3,6 +3,11 @@ import { createContext, useContext, useState } from "react";
 import { Snackbar, Alert as MuiAlert } from "@mui/material";
 
 type Severity = "error" | "warning" | "info" | "success";
+type Popup = {
+    open: boolean;
+    message: string;
+    severity: Severity;
+}
 
 export interface AlertController {
     showMessage: (message: string, severity?: Severity) => void;
@@ -22,7 +27,7 @@ export function useAlert(): AlertController {
         showMessage: alertContext.showMessage,
         hideMessage: alertContext.hideMessage,
         showSuccessMessage: alertContext.showSuccessMessage,
-        showErrorMessage: alertContext.showMessage,
+        showErrorMessage: alertContext.showErrorMessage,
     };
 }
 
@@ -31,19 +36,18 @@ const AlertContext = createContext<AlertController | null>(null);
 export interface AlertProviderProps extends React.PropsWithChildren { }
 
 export function AlertProvider({ children }: AlertProviderProps) {
-    const [severity, setSeverity] = useState<Severity>("info");
-    const [message, setMessage] = useState<string | null>(null);
-    const [open, setOpen] = useState(false);
+    const [popup, setPopup] = useState<Popup>({
+        open: false,
+        message: "",
+        severity: "info",
+    });
 
-    const showMessage = (msg: string, sev: Severity = "info") => {
-        setSeverity(sev);
-        setMessage(msg);
-        setOpen(true);
+    const showMessage = (message: string, severity: Severity = "info") => {
+        setPopup({ open: true, message, severity });
     };
 
     const hideMessage = () => {
-        setMessage(null);
-        setOpen(false);
+        setPopup({ ...popup, open: false, message: "" });
     };
 
     const showSuccessMessage = (msg: string) => showMessage(msg, "success");
@@ -51,7 +55,12 @@ export function AlertProvider({ children }: AlertProviderProps) {
 
     return (
         <AlertContext.Provider value={{ showMessage, hideMessage, showSuccessMessage, showErrorMessage }}>
-            <Alert open={open} message={message} onClose={hideMessage} severity={severity} />
+            <Alert
+                open={popup.open}
+                message={popup.message}
+                onClose={hideMessage}
+                severity={popup.severity}
+            />
             {children}
         </AlertContext.Provider>
     );
