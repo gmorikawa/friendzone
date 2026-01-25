@@ -137,11 +137,15 @@ function CommentSection({ feedController, post }: CommentSectionProps) {
 
             {post.comments?.map((comment: Comment, index: number) => (
                 <Container key={index}>
-                    <UserItem user={comment.createdBy} />
-
-                    <Paragraph sx={{ marginTop: 1 }}>
-                        {comment.content}
-                    </Paragraph>
+                    <UserItem
+                        user={comment.createdBy}
+                        hideEmail
+                        contentSlot={(
+                            <Paragraph size="small">
+                                {comment.content}
+                            </Paragraph>
+                        )}
+                    />
                 </Container>
             ))}
         </Stack>

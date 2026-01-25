@@ -9,15 +9,15 @@ export interface UserItemProps {
     user: User;
 
     hideEmail?: boolean;
+    contentSlot?: React.ReactNode;
 }
 
-export function UserItem({ user, hideEmail }: UserItemProps) {
+export function UserItem({ user, hideEmail, contentSlot }: UserItemProps) {
     return (
         <Container
             sx={{
                 display: "flex",
                 flexDirection: "row",
-                alignItems: "center",
                 gap: 2,
             }}
         >
@@ -26,7 +26,7 @@ export function UserItem({ user, hideEmail }: UserItemProps) {
             </Container>
 
             <Container>
-                <Paragraph size="large">
+                <Paragraph size="medium" fontWeight="bold">
                     {buildFullName(user)}
                 </Paragraph>
 
@@ -34,6 +34,12 @@ export function UserItem({ user, hideEmail }: UserItemProps) {
                     <Paragraph size="small">
                         {user.email}
                     </Paragraph>
+                )}
+
+                {contentSlot && (
+                    <Container sx={{ marginTop: 1 }}>
+                        {contentSlot}
+                    </Container>
                 )}
             </Container>
         </Container>
