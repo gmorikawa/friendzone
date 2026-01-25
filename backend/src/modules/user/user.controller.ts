@@ -6,7 +6,7 @@ import { User, UserDocument } from "./user.schema";
 import { UserService } from "./user.service";
 import { UserNotFoundError } from "./user.errors";
 
-@Controller("users")
+@Controller("api/users")
 export class UserController {
 
     constructor(

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 
@@ -30,10 +30,11 @@ export class AppModule implements NestModule {
         consumer
             .apply(AuthorizationMiddleware)
             .exclude(
-                "/api/auth/sign-up",
-                "/api/auth/log-in",
-                "/api/auth/confirm-email",
-                "/api/auth/password-reset",
+                { path: "api/auth/sign-up", method: RequestMethod.POST },
+                { path: "api/auth/log-in", method: RequestMethod.POST },
+                { path: "api/auth/password-reset", method: RequestMethod.POST },
+                { path: "api/auth/confirm-email", method: RequestMethod.PATCH },
+                { path: "api/auth/password-reset", method: RequestMethod.PATCH },
             )
             .forRoutes("*");
     }

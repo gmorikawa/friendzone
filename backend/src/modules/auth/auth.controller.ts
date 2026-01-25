@@ -7,7 +7,7 @@ import type { UserSession } from "./interfaces/user-session.interface";
 import type { Token } from "./interfaces/token.interface";
 import type { PlainPassword } from "../user/interfaces/password-hasher.interface";
 
-@Controller("auth")
+@Controller("api/auth")
 export class AuthController {
     
     constructor(

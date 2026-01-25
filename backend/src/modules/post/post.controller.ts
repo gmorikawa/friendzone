@@ -3,7 +3,7 @@ import type { CreateCommentDTO, CreatePostDTO, UpdatePostDTO } from './post.dto'
 import { PostService } from './post.service';
 import { LoggedUser } from '../user/interfaces/logged-user.interface';
 
-@Controller("posts")
+@Controller("api/posts")
 export class PostController {
 
     constructor(
