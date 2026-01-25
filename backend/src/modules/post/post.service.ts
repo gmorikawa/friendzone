@@ -2,10 +2,11 @@ import { Model } from "mongoose";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { CreatePostDTO } from "./post.dto";
+import { CreatePostDTO, UpdatePostDTO } from "./post.dto";
 import { Post, PostDocument } from "./post.schema";
 import { LoggedUser } from "../user/interfaces/logged-user.interface";
 import { UnauthorizedAccessError } from "../auth/auth.errors";
+import { PostNotFoundError } from "./post.error";
 
 @Injectable()
 export class PostService {
@@ -30,5 +31,37 @@ export class PostService {
         });
 
         return createdPost.save();
+    }
+
+    public async update(loggedUser: LoggedUser, id: string, updatePost: UpdatePostDTO) {
+        const post = await this.model.findById(id)
+            .populate("createdBy", "-password -createdAt -updatedAt -biography -status");
+        
+        if (!post) {
+            throw new PostNotFoundError(id);
+        }
+
+        if (post.createdBy.id !== loggedUser.id) {
+            throw new UnauthorizedAccessError();
+        }
+
+        post.content = updatePost.content;
+
+        return post.save();
+    }
+
+    public async delete(loggedUser: LoggedUser, id: string) {
+        const post = await this.model.findById(id)
+            .populate("createdBy", "-password -createdAt -updatedAt -biography -status");
+        
+        if (!post) {
+            throw new PostNotFoundError(id);
+        }
+
+        if (post.createdBy.id !== loggedUser.id) {
+            throw new UnauthorizedAccessError();
+        }
+
+        return this.model.findByIdAndDelete(id);
     }
 }

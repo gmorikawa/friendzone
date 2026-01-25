@@ -4,3 +4,7 @@ export interface CreatePostDTO {
     content: string;
     createdBy: string;
 }
+
+export interface UpdatePostDTO {
+    content: string;
+}
