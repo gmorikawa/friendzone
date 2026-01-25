@@ -20,6 +20,11 @@ export class PostService {
             .sort({ "createdAt": -1 });
     }
 
+    public async findById(id: string): Promise<PostDocument | null> {
+        return this.model.findById(id)
+            .populate("createdBy", "-password -createdAt -updatedAt -biography -status");
+    }
+
     public async create(loggedUser: LoggedUser, createPost: CreatePostDTO) {
         if (createPost.createdBy !== loggedUser.id) {
             throw new UnauthorizedAccessError();

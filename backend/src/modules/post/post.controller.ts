@@ -15,6 +15,13 @@ export class PostController {
         return this.service.findAll();
     }
 
+    @Get(":id")
+    public async findById(
+        @Param("id") id: string
+    ) {
+       return this.service.findById(id);
+    }
+
     @Post()
     public async create(
         @Req() { user }: Request & { user: LoggedUser },

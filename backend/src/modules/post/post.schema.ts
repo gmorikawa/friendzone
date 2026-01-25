@@ -1,6 +1,6 @@
 import mongoose, { HydratedDocument } from "mongoose";
 
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory, Virtual } from "@nestjs/mongoose";
 import { User } from "../user/user.schema";
 
 export type PostDocument = HydratedDocument<Post>;
@@ -18,7 +18,11 @@ export type PostDocument = HydratedDocument<Post>;
     collection: "posts",
 })
 export class Post {
-    @Prop()
+    @Virtual({
+        get: function (this: PostDocument) {
+            return this._id.toString();
+        },
+    })
     id: string;
 
     @Prop({

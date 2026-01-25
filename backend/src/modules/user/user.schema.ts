@@ -1,6 +1,6 @@
 import { HydratedDocument } from "mongoose";
 
-import { Prop, raw, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, raw, Schema, SchemaFactory, Virtual } from "@nestjs/mongoose";
 
 import type { Name } from "./interfaces/name.interface";
 import { UserStatus } from "./user.enum";
@@ -20,7 +20,11 @@ export type UserDocument = HydratedDocument<User>;
     collection: "users",
 })
 export class User {
-    @Prop()
+    @Virtual({
+        get: function (this: UserDocument) {
+            return this._id.toString();
+        },
+    })
     id: string;
 
     @Prop({
@@ -48,7 +52,7 @@ export class User {
         unique: true,
         required: true,
         trim: true,
-     })
+    })
     email: string;
 
     @Prop({
