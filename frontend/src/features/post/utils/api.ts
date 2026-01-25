@@ -2,7 +2,7 @@ import axios, { type AxiosResponse } from "axios";
 import { Environment } from "@/config/environment";
 
 import type { Session } from "@/features/auth/types/session";
-import type { CreatePost } from "@/features/post/types/create-post";
+import type { CreateComment, CreatePost } from "@/features/post/types/create-post";
 import type { Post } from "@/features/post/types/post";
 import type { UpdatePost } from "../types/update-post";
 
@@ -71,6 +71,27 @@ export async function updatePost(
     const url = `${Environment.API_URL}/posts/${id}`;
 
     return axios.put<Post>(
+        url,
+        data,
+        {
+            headers: {
+                Authorization: `Bearer ${session.token}`,
+            },
+        }
+    )
+        .then((response: AxiosResponse) => {
+            return response.data;
+        });
+}
+
+export async function addCommentToPost(
+    session: Session,
+    id: string,
+    data: CreateComment
+): Promise<Post> {
+    const url = `${Environment.API_URL}/posts/${id}/comments`;
+    
+    return axios.patch<Post>(
         url,
         data,
         {

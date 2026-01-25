@@ -17,8 +17,8 @@ export const userConfirmPasswordValidation = z.string().min(6, "Confirm password
 export const userCurrentPasswordValidation = z.string().min(6, "Current password is required");
 export const userBiographyValidation = z.string().max(255, "Bio must be at most 255 characters").optional();
 
-export function validateUserUpdateData(updateUser: Partial<UpdateUser>): ValidationResult {
-    const userUpdateValidationSchema = z.object({
+export function validateUserUpdateData(data: Partial<UpdateUser>): ValidationResult {
+    const validationSchema = z.object({
         name: userNameValidation,
         email: userEmailValidation,
         password: userPasswordValidation.optional().or(z.literal("")),
@@ -30,5 +30,5 @@ export function validateUserUpdateData(updateUser: Partial<UpdateUser>): Validat
         path: ["confirmPassword"],
     });
 
-    return validateData<UpdateUser>(userUpdateValidationSchema, updateUser);
+    return validateData<UpdateUser>(validationSchema, data);
 }

@@ -18,7 +18,7 @@ export function UserItem({ user, hideEmail }: UserItemProps) {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
-                gap: 1,
+                gap: 2,
             }}
         >
             <Container sx={{ flexBasis: "auto" }}>

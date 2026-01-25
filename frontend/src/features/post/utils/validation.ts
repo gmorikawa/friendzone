@@ -3,25 +3,33 @@ import z from "zod";
 import type { ValidationResult } from "@/shared/form/types/validation-result";
 import { validateData } from "@/shared/form/utils/validator";
 
-import type { CreatePost } from "@/features/post/types/create-post";
+import type { CreateComment, CreatePost } from "@/features/post/types/create-post";
 import type { UpdatePost } from "@/features/post/types/update-post";
 
 export const postContentValidation = z.string().min(1, "Content is required");
 export const postCreatedByValidation = z.string().min(1, "Created By is required");
 
-export function validatePostCreateData(createPost: Partial<CreatePost>): ValidationResult {
-    const postCreateValidationSchema = z.object({
+export function validatePostCreateData(data: Partial<CreatePost>): ValidationResult {
+    const validationSchema = z.object({
         content: postContentValidation,
         createdBy: postCreatedByValidation,
     });
 
-    return validateData<CreatePost>(postCreateValidationSchema, createPost);
+    return validateData<CreatePost>(validationSchema, data);
 }
 
-export function validatePostUpdateData(updatePost: Partial<UpdatePost>): ValidationResult {
-    const postUpdateValidationSchema = z.object({
+export function validatePostUpdateData(data: Partial<UpdatePost>): ValidationResult {
+    const validationSchema = z.object({
         content: postContentValidation,
     });
 
-    return validateData<UpdatePost>(postUpdateValidationSchema, updatePost);
+    return validateData<UpdatePost>(validationSchema, data);
+}
+
+export function validateCommentCreateData(data: Partial<CreateComment>): ValidationResult {
+    const validationSchema = z.object({
+        content: z.string().min(1, "Comment content is required").max(500, "Comment must be at most 500 characters"),
+    });
+
+    return validateData<{ content: string }>(validationSchema, data);
 }
