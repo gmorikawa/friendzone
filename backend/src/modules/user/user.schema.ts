@@ -3,7 +3,7 @@ import { HydratedDocument } from "mongoose";
 import { Prop, raw, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import type { Name } from "./interfaces/name.interface";
-import { UserStatus } from "./enums/status.enum";
+import { UserStatus } from "./user.enum";
 
 export type UserDocument = HydratedDocument<User>;
 

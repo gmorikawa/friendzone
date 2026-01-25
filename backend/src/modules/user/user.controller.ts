@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
 
-import type { CreateUserDTO } from "./dtos/create-user.dto";
-import type { UpdateUserDTO } from "./dtos/update-user.dto";
+import type { CreateUserDTO, UpdateUserDTO } from "./user.dto";
+import type {  } from "./user.dto";
 import { User, UserDocument } from "./user.schema";
 import { UserService } from "./user.service";
 import { UserNotFoundError } from "./user.errors";

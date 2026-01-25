@@ -1,7 +1,7 @@
 import { Body, Controller, Patch, Post, Put } from "@nestjs/common";
 
 import { AuthService } from "./auth.service";
-import type { CreateUserDTO } from "../user/dtos/create-user.dto";
+import type { CreateUserDTO } from "../user/user.dto";
 import { User } from "../user/user.schema";
 import type { UserSession } from "./interfaces/user-session.interface";
 import type { Token } from "./interfaces/token.interface";

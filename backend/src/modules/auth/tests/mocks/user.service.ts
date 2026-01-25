@@ -1,4 +1,4 @@
-import { CreateUserDTO } from "../../../../modules/user/dtos/create-user.dto";
+import { CreateUserDTO } from "../../../../modules/user/user.dto";
 import { User } from "../../../..//modules/user/user.schema";
 
 export class MockUserService {

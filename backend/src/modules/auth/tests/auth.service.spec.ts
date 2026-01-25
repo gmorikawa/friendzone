@@ -3,8 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AuthService } from "../auth.service";
 import { MockUserService } from "./mocks/user.service";
 import { UserService } from "../../../modules/user/user.service";
-import { CreateUserDTO } from "../../../modules/user/dtos/create-user.dto";
-import { JwtTokenGenerator } from "../../../common/token-generator/jwt.token-generator";
+import { CreateUserDTO } from "../../../modules/user/user.dto";
 import { MockTokenGenerator } from "./mocks/token-generator.mock";
 
 describe("AuthService", () => {

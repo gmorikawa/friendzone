@@ -4,10 +4,9 @@ import { Inject, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
 import { User, UserDocument } from "./user.schema";
-import { CreateUserDTO } from "./dtos/create-user.dto";
+import { CreateUserDTO, UpdateUserDTO } from "./user.dto";
 import type { HashedPassword, PasswordHasher, PlainPassword } from "./interfaces/password-hasher.interface";
 import { EmailAlreadyExistsError } from "./user.errors";
-import { UpdateUserDTO } from "./dtos/update-user.dto";
 
 @Injectable()
 export class UserService {

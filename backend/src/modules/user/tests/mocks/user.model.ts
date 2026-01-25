@@ -1,4 +1,4 @@
-import { UserStatus } from "../../enums/status.enum";
+import { UserStatus } from "../../user.enum";
 import { User } from "../../user.schema";
 
 export class UserModel {

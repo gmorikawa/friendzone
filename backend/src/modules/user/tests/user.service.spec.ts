@@ -7,7 +7,7 @@ import { EmailAlreadyExistsError, UserNotFoundError } from "../user.errors";
 import type { PasswordHasher } from "../interfaces/password-hasher.interface";
 import { BcryptPasswordHasher } from "../../../common/password-hasher/bcrypt.password-hasher";
 import { UserModel } from "./mocks/user.model";
-import { UserStatus } from "../enums/status.enum";
+import { UserStatus } from "../user.enum";
 
 describe("UserService", () => {
     let service: UserService;
