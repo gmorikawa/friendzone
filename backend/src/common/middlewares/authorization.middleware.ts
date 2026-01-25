@@ -6,15 +6,8 @@ import { LoggedUser } from "../../modules/user/interfaces/logged-user.interface"
 import { UnauthorizedAccessError } from "../../modules/auth/auth.errors";
 import { TokenContext } from "../../modules/auth/enums/token-context";
 
-const publicPaths = [
-    "/api/auth/sign-up",
-    "/api/auth/log-in",
-    "/api/auth/confirm-email",
-    "/api/auth/password-reset",
-];
-
 @Injectable()
-export class LoggerMiddleware implements NestMiddleware {
+export class AuthorizationMiddleware implements NestMiddleware {
     constructor(
         @Inject("TokenGenerator") private tokenGenerator: TokenGenerator,
     ) { }
@@ -30,14 +23,10 @@ export class LoggerMiddleware implements NestMiddleware {
     }
 
     use(req: Request & { user?: LoggedUser }, res: Response, next: NextFunction) {
-        if (publicPaths.includes(req.url)) {
-            next();
-            return;
-        }
-
         const token = this.getTokenFromHeader(req);
 
         if (!token) {
+            next(new UnauthorizedAccessError());
             return;
         }
 

@@ -10,6 +10,12 @@ import { NodemailerMailSender } from "../../common/mail-sender/nodemailer.mail-s
     imports: [
         UserModule
     ],
+    exports: [
+        {
+            provide: "TokenGenerator",
+            useClass: JwtTokenGenerator
+        },
+    ],
     controllers: [
         AuthController
     ],
