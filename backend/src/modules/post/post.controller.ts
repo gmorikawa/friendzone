@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common';
-import type { CreatePostDTO, UpdatePostDTO } from './post.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Req } from '@nestjs/common';
+import type { CreateCommentDTO, CreatePostDTO, UpdatePostDTO } from './post.dto';
 import { PostService } from './post.service';
 import { LoggedUser } from '../user/interfaces/logged-user.interface';
 
@@ -45,5 +45,14 @@ export class PostController {
         @Param("id") id: string,
     ) {
         return this.service.delete(user, id);
+    }
+
+    @Patch(":id/comments")
+    public async addComment(
+        @Req() { user }: Request & { user: LoggedUser },
+        @Param("id") id: string,
+        @Body() comment: CreateCommentDTO,
+    ) {
+        return this.service.addComment(user, id, comment);
     }
 }

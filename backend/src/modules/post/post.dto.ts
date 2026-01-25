@@ -8,3 +8,7 @@ export interface CreatePostDTO {
 export interface UpdatePostDTO {
     content: string;
 }
+
+export interface CreateCommentDTO {
+    content: string;
+}

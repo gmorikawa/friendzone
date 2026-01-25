@@ -1,7 +1,8 @@
 import mongoose, { HydratedDocument } from "mongoose";
 
-import { Prop, Schema, SchemaFactory, Virtual } from "@nestjs/mongoose";
+import { Prop, raw, Schema, SchemaFactory, Virtual } from "@nestjs/mongoose";
 import { User } from "../user/user.schema";
+import { Comment } from "./post.interface";
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -40,6 +41,24 @@ export class Post {
         required: true,
     })
     createdBy: User;
+
+    @Prop(raw([{
+        content: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: User.name,
+            required: true,
+        },
+        createdAt: {
+            type: Date,
+            default: () => new Date(),
+        },
+    }]))
+    comments: Comment[];
 
     @Prop({
         type: Date,
