@@ -1,9 +1,10 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect } from "react";
 
 import type { HttpError } from "@/shared/http/utils/error-handling";
 
 import { useAlert } from "@/components/feedback/alert";
 import { Container } from "@/components/containers/container";
+import { Paragraph } from "@/components/typography/paragraph";
 
 import type { User } from "@/features/user/types/user";
 import { useSession } from "@/features/auth/hooks/session";
@@ -30,7 +31,7 @@ export function UserSettings() {
             {user ? (
                 <UserForm user={user} />
             ) : (
-                <Fragment>Loading user profile...</Fragment>
+                <Paragraph>Loading user profile...</Paragraph>
             )}
         </Container>
     );

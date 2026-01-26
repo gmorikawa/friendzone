@@ -151,9 +151,11 @@ export function UserForm({ user }: UserFormProps) {
                         />
                     </Stack>
 
-                    <Button variant="contained" type="submit">
-                        Update Profile
-                    </Button>
+                    <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
+                        <Button variant="contained" type="submit">
+                            Update Profile
+                        </Button>
+                    </Container>
                 </Stack>
             </Form>
         </Container>
