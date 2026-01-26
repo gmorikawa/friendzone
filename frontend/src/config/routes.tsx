@@ -17,6 +17,7 @@ import { UserProfile } from "@/features/user/pages/profile";
 import { PostCreatePage } from "@/features/post/pages/post-create";
 import { PostUpdatePage } from "@/features/post/pages/post-update";
 import { FeedPage } from "@/features/post/pages/feed";
+import { FriendListPage } from "@/features/friend/pages/friend-list";
 
 export function RouteProvider() {
     return (
@@ -42,6 +43,7 @@ export function RouteProvider() {
                         <Route path="posts" element={<PostCreatePage />} />
                         <Route path="posts/:id" element={<PostUpdatePage />} />
                         <Route path="feed" element={<FeedPage />} />
+                        <Route path="friends" element={<FriendListPage />} />
                     </Route>
                 </Route>
             </Routes>

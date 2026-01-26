@@ -2,6 +2,28 @@ import axios, { type AxiosResponse } from "axios";
 
 import { Environment } from "@/config/environment";
 import type { Session } from "@/features/auth/types/session";
+import type { Friend } from "../types/friend";
+import type { FriendStatus } from "../types/enum";
+
+export async function getFriendsByStatus(
+    session: Session,
+    userId: string,
+    status: FriendStatus
+): Promise<Friend[]> {
+    const url = `${Environment.API_URL}/users/${userId}/friends/status/${status}`;
+
+    return axios.get<any[]>(
+        url,
+        {
+            headers: {
+                Authorization: `Bearer ${session.token}`,
+            },
+        }
+    )
+        .then((response: AxiosResponse) => {
+            return response.data;
+        });
+}
 
 export async function requestFriendship(
     session: Session,
