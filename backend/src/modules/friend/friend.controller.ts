@@ -1,15 +1,24 @@
 import { Request } from "express";
 
-import { Controller, Delete, Param, Patch, Post, Req } from "@nestjs/common";
+import { Controller, Delete, Get, Param, Patch, Post, Req } from "@nestjs/common";
 
 import { FriendService } from "./friend.service";
 import { LoggedUser } from "../user/interfaces/logged-user.interface";
+import { FriendStatus } from "./friend.enum";
 
 @Controller("api/users/:userId/friends")
 export class FriendController {
     constructor(
         private service: FriendService,
     ) { }
+
+    @Get("status/:status")
+    public async getFriendsByStatus(
+        @Req() { user }: Request & { user: LoggedUser },
+        @Param("status") status: FriendStatus
+    ) {
+        return this.service.findByStatus(user.id, status);
+    }
 
     @Post(":partnerId")
     public async requestFriendship(

@@ -15,6 +15,11 @@ export class FriendService {
         @InjectModel(Friend.name) private model: Model<Friend>,
     ) { }
 
+    public async findByStatus(userId: string, status: FriendStatus) {
+        return this.model.find({ user: userId, status })
+            .populate("partner", "name email");
+    }
+
     public async requestFriendship(loggedUser: LoggedUser, senderId: string, partnerId: string) {
         if (loggedUser.id !== senderId) {
             throw new UnauthorizedAccessError();
