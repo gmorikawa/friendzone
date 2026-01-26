@@ -10,9 +10,11 @@ export interface UserItemProps {
 
     hideEmail?: boolean;
     contentSlot?: React.ReactNode;
+
+    actionSlot?: React.ReactNode;
 }
 
-export function UserItem({ user, hideEmail, contentSlot }: UserItemProps) {
+export function UserItem({ user, hideEmail, contentSlot, actionSlot }: UserItemProps) {
     return (
         <Container
             sx={{
@@ -41,6 +43,10 @@ export function UserItem({ user, hideEmail, contentSlot }: UserItemProps) {
                         {contentSlot}
                     </Container>
                 )}
+            </Container>
+
+            <Container sx={{ marginLeft: "auto" }}>
+                {actionSlot}
             </Container>
         </Container>
     );
