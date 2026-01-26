@@ -7,6 +7,7 @@ import { useParams } from "@/shared/router/hooks/params";
 import { useAlert } from "@/components/feedback/alert";
 import { useForm } from "@/components/inputs/form-controller";
 import { Container } from "@/components/containers/container";
+import { Stack } from "@/components/containers/stack";
 import { Title } from "@/components/typography/title";
 
 import type { Post } from "@/features/post/types/post";
@@ -56,9 +57,11 @@ export function PostUpdatePage() {
     }, []);
     return (
         <Container>
-            <Title level={3}>Update Post</Title>
+            <Stack spacing={2}>
+                <Title level={3}>Update Post</Title>
 
-            <PostForm form={form} />
+                <PostForm form={form} />
+            </Stack>
         </Container>
     );
 }

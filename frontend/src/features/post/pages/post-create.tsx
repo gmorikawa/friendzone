@@ -12,6 +12,7 @@ import { useSession } from "@/features/auth/hooks/session";
 import { validatePostCreateData } from "@/features/post/utils/validation";
 import { createPost } from "@/features/post/utils/api";
 import { PostForm } from "@/features/post/components/post-form";
+import { Stack } from "@/components/containers/stack";
 
 export function PostCreatePage() {
     const alert = useAlert();
@@ -37,9 +38,11 @@ export function PostCreatePage() {
     });
     return (
         <Container>
-            <Title level={3}>Create Post</Title>
+            <Stack spacing={2}>
+                <Title level={3}>Create Post</Title>
 
-            <PostForm form={form} />
+                <PostForm form={form} />
+            </Stack>
         </Container>
     );
 }
