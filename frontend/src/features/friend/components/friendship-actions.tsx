@@ -1,15 +1,11 @@
-import {
-    AcceptIcon,
-    AddFriendIcon,
-    DeclineIcon,
-    RemoveFriendIcon
-} from "@/shared/icons";
-
 import { Container } from "@/components/containers/container";
-import { IconButton } from "@/components/inputs/icon-button";
 
 import type { User } from "@/features/user/types/user";
 import type { Friend } from "../types/friend";
+import { AddFriendButton } from "./add-friend-button";
+import { AcceptRequestButton } from "./accept-request-button";
+import { DeclineRequestButton } from "./decline-request-button";
+import { RemoveFriendButton } from "./remove-friend-button";
 
 export interface FriendshipActionsProps {
     user: User;
@@ -49,11 +45,7 @@ export function FriendshipActions({ user, friend, onAddFriend, onAcceptRequest, 
     if (friend) {
         if (friend.status === "CONNECTED") {
             return (
-                <IconButton
-                    color="error"
-                    onClick={handleRemoveFriend}>
-                    <RemoveFriendIcon />
-                </IconButton>
+                <RemoveFriendButton onClick={handleRemoveFriend} />
             );
         }
 
@@ -64,27 +56,14 @@ export function FriendshipActions({ user, friend, onAddFriend, onAcceptRequest, 
         if (friend.status === "REQUESTED") {
             return (
                 <Container sx={{ display: "flex", gap: 1 }}>
-                    <IconButton
-                        color="success"
-                        onClick={handleAcceptRequest}>
-                        <AcceptIcon />
-                    </IconButton>
-
-                    <IconButton
-                        color="error"
-                        onClick={handleDeclineRequest}>
-                        <DeclineIcon />
-                    </IconButton>
+                    <AcceptRequestButton onClick={handleAcceptRequest} />
+                    <DeclineRequestButton onClick={handleDeclineRequest} />
                 </Container>
             );
         }
     } else {
         return (
-            <IconButton
-                color="primary"
-                onClick={handleAddFriend}>
-                <AddFriendIcon />
-            </IconButton>
+            <AddFriendButton onClick={handleAddFriend} />
         );
     }
 }
