@@ -6,7 +6,7 @@ import { CreateCommentDTO, CreatePostDTO, UpdatePostDTO } from "./post.dto";
 import { Post, PostDocument } from "./post.schema";
 import { LoggedUser } from "../user/interfaces/logged-user.interface";
 import { UnauthorizedAccessError } from "../auth/auth.errors";
-import { PostNotFoundError } from "./post.error";
+import { ContentTooLongError, EmptyPostContentError, PostNotFoundError } from "./post.error";
 
 @Injectable()
 export class PostService {
@@ -32,8 +32,17 @@ export class PostService {
             throw new UnauthorizedAccessError();
         }
 
+        const content = createPost.content?.trim();
+        if (!content || content.length === 0) {
+            throw new EmptyPostContentError();
+        }
+
+        if (content.length > 255) {
+            throw new ContentTooLongError(255);
+        }
+
         const createdPost = new this.model({
-            content: createPost.content,
+            content: content,
             createdBy: createPost.createdBy,
         });
 
@@ -52,7 +61,16 @@ export class PostService {
             throw new UnauthorizedAccessError();
         }
 
-        post.content = updatePost.content;
+        const content = updatePost.content?.trim();
+        if (!content || content.length === 0) {
+            throw new EmptyPostContentError();
+        }
+
+        if (content.length > 255) {
+            throw new ContentTooLongError(255);
+        }
+
+        post.content = content;
 
         return post.save();
     }
@@ -73,7 +91,6 @@ export class PostService {
     }
 
     public async addComment(loggedUser: LoggedUser, id: string, comment: CreateCommentDTO) {
-        console.log("Adding comment:", comment);
         const post = await this.model.findById(id);
 
         if (!post) {

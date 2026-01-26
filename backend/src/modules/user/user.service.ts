@@ -38,9 +38,7 @@ export class UserService {
     }
 
     public async create(createUser: CreateUserDTO): Promise<UserDocument> {
-        const existingUser = await this.findByEmail(createUser.email);
-
-        if (existingUser) {
+        if (await this.findByEmail(createUser.email)) {
             throw new EmailAlreadyExistsError(createUser.email);
         }
 
@@ -66,12 +64,19 @@ export class UserService {
             return null;
         }
 
+        if (await this.findByEmail(updateUser.email)) {
+            throw new EmailAlreadyExistsError(updateUser.email);
+        }
+
         user.email = updateUser.email ?? user.email;
         user.name.first = updateUser.name?.first ?? user.name.first;
         user.name.last = updateUser.name?.last ?? user.name.last;
         user.biography = updateUser.biography ?? user.biography;
 
-        if (updateUser.password && updateUser.password.length > 0 && updateUser.password === updateUser.confirmPassword) {
+        if (updateUser.password
+            && updateUser.password.length > 0
+            && updateUser.password === updateUser.confirmPassword
+        ) {
             user.password = await this.passwordHasher.hash(updateUser.password);
         }
 
