@@ -6,13 +6,16 @@ import { Container } from "@/components/containers/container";
 import { Form } from "@/components/inputs/form";
 import { PasswordField } from "@/components/inputs/password-field";
 import { Stack } from "@/components/containers/stack";
+import { TextareaField } from "@/components/inputs/textarea-field";
 import { TextField } from "@/components/inputs/text-field";
+import { Title } from "@/components/typography/title";
 
 import type { User } from "@/features/user/types/user";
 import type { UpdateUser } from "@/features/user/types/update-user";
 import { useSession } from "@/features/auth/hooks/session";
 import { validateUserUpdateData } from "@/features/user/utils/validation";
 import { updateUser } from "@/features/user/utils/api";
+import { Paragraph } from "@/components/typography/paragraph";
 
 export interface UserFormProps {
     user: User;
@@ -59,62 +62,93 @@ export function UserForm({ user }: UserFormProps) {
     return (
         <Container>
             <Form controller={form}>
-                <Stack spacing={2}>
-                    <TextField
-                        label="First Name"
-                        value={form.entity.name?.first}
-                        onChange={(newValue: string) => form.handleChange("name.first", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("name.first", newValue)}
-                        error={form.getError("name.first")}
-                    />
+                <Stack spacing={4}>
+                    <Stack spacing={2}>
+                        <Title level={6} fontWeight="bold">
+                            Basic Information
+                        </Title>
 
-                    <TextField
-                        label="Last Name"
-                        value={form.entity.name?.last}
-                        onChange={(newValue: string) => form.handleChange("name.last", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("name.last", newValue)}
-                        error={form.getError("name.last")}
-                    />
+                        <Paragraph>
+                            To change your password, please enter a new password and confirm it below.
+                        </Paragraph>
 
-                    <TextField
-                        label="Email Address"
-                        value={form.entity.email}
-                        onChange={(newValue: string) => form.handleChange("email", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("email", newValue)}
-                        error={form.getError("email")}
-                    />
+                        <TextField
+                            label="First Name"
+                            value={form.entity.name?.first}
+                            onChange={(newValue: string) => form.handleChange("name.first", newValue)}
+                            onBlur={(newValue: string) => form.handleBlur("name.first", newValue)}
+                            error={form.getError("name.first")}
+                        />
 
-                    <TextField
-                        label="Biography"
-                        value={form.entity.biography}
-                        onChange={(newValue: string) => form.handleChange("biography", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("biography", newValue)}
-                        error={form.getError("biography")}
-                    />
+                        <TextField
+                            label="Last Name"
+                            value={form.entity.name?.last}
+                            onChange={(newValue: string) => form.handleChange("name.last", newValue)}
+                            onBlur={(newValue: string) => form.handleBlur("name.last", newValue)}
+                            error={form.getError("name.last")}
+                        />
 
-                    <PasswordField
-                        label="Password"
-                        value={form.entity.password}
-                        onChange={(newValue: string) => form.handleChange("password", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("password", newValue)}
-                        error={form.getError("password")}
-                    />
+                        <TextField
+                            label="Email Address"
+                            value={form.entity.email}
+                            onChange={(newValue: string) => form.handleChange("email", newValue)}
+                            onBlur={(newValue: string) => form.handleBlur("email", newValue)}
+                            error={form.getError("email")}
+                        />
 
-                    <PasswordField
-                        label="Confirm Password"
-                        value={form.entity.confirmPassword}
-                        onChange={(newValue: string) => form.handleChange("confirmPassword", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("confirmPassword", newValue)}
-                        error={form.getError("confirmPassword")}
-                    />
+                        <TextareaField
+                            label="Biography"
+                            value={form.entity.biography}
+                            onChange={(newValue: string) => form.handleChange("biography", newValue)}
+                            onBlur={(newValue: string) => form.handleBlur("biography", newValue)}
+                            error={form.getError("biography")}
+                            minRows={4}
+                        />
+                    </Stack>
 
-                    <PasswordField
-                        label="Current Password"
-                        value={form.entity.currentPassword}
-                        onChange={(newValue: string) => form.handleChange("currentPassword", newValue)}
-                        onBlur={(newValue: string) => form.handleBlur("currentPassword", newValue)}
-                        error={form.getError("currentPassword")}
-                    />
+                    <Stack spacing={2}>
+                        <Title level={6} fontWeight="bold">
+                            Security Settings
+                        </Title>
+
+                        <Paragraph>
+                            To change your password, please enter a new password and confirm it below.
+                        </Paragraph>
+
+                        <PasswordField
+                            label="Password"
+                            value={form.entity.password}
+                            onChange={(newValue: string) => form.handleChange("password", newValue)}
+                            onBlur={(newValue: string) => form.handleBlur("password", newValue)}
+                            error={form.getError("password")}
+                        />
+
+                        <PasswordField
+                            label="Confirm Password"
+                            value={form.entity.confirmPassword}
+                            onChange={(newValue: string) => form.handleChange("confirmPassword", newValue)}
+                            onBlur={(newValue: string) => form.handleBlur("confirmPassword", newValue)}
+                            error={form.getError("confirmPassword")}
+                        />
+                    </Stack>
+
+                    <Stack spacing={2}>
+                        <Title level={6} fontWeight="bold">
+                            Confirm Current Password
+                        </Title>
+
+                        <Paragraph>
+                            Confirm your current password to apply changes.
+                        </Paragraph>
+
+                        <PasswordField
+                            label="Current Password"
+                            value={form.entity.currentPassword}
+                            onChange={(newValue: string) => form.handleChange("currentPassword", newValue)}
+                            onBlur={(newValue: string) => form.handleBlur("currentPassword", newValue)}
+                            error={form.getError("currentPassword")}
+                        />
+                    </Stack>
 
                     <Button variant="contained" type="submit">
                         Update Profile

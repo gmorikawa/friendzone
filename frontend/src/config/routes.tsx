@@ -13,7 +13,7 @@ import { PasswordRecoveryPage } from "@/features/auth/pages/password-recovery";
 import { PasswordRecoveryConfirmationPage } from "@/features/auth/pages/password-recovery-confirmation";
 
 import { UserListPage } from "@/features/user/pages/list";
-import { UserProfile } from "@/features/user/pages/profile";
+import { UserSettings } from "@/features/user/pages/settings";
 import { PostCreatePage } from "@/features/post/pages/post-create";
 import { PostUpdatePage } from "@/features/post/pages/post-update";
 import { FeedPage } from "@/features/post/pages/feed";
@@ -39,7 +39,7 @@ export function RouteProvider() {
 
                     <Route path="app" element={<AppLayout />}>
                         <Route path="users" element={<UserListPage />} />
-                        <Route path="profile/:id" element={<UserProfile />} />
+                        <Route path="settings" element={<UserSettings />} />
                         <Route path="posts" element={<PostCreatePage />} />
                         <Route path="posts/:id" element={<PostUpdatePage />} />
                         <Route path="feed" element={<FeedPage />} />

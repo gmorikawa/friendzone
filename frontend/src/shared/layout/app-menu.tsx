@@ -3,8 +3,9 @@ import {
     FeedIcon,
     FriendsIcon,
     LogoutIcon,
-    ProfileIcon,
-    UsersIcon
+    SettingsIcon,
+    UsersIcon,
+    WritePostIcon
 } from "@/shared/icons";
 
 import { Container } from "@/components/containers/container";
@@ -42,13 +43,13 @@ export function AppMenu() {
             <List>
                 <ListItem label="Users" icon={<UsersIcon />} context="/app/users" onClick={handleNavigate} />
                 <ListItem label="Feed" icon={<FeedIcon />} context="/app/feed" onClick={handleNavigate} />
-                <ListItem label="Posts" icon={<FeedIcon />} context="/app/posts" onClick={handleNavigate} />
+                <ListItem label="Create Post" icon={<WritePostIcon />} context="/app/posts" onClick={handleNavigate} />
                 <ListItem label="Friends" icon={<FriendsIcon />} context="/app/friends" onClick={handleNavigate} />
             </List>
 
             <Container>
                 <List>
-                    <ListItem label="Profile" icon={<ProfileIcon />} context={`/app/profile/${session.loggedUser?.id}`} onClick={handleNavigate} />
+                    <ListItem label="Settings" icon={<SettingsIcon />} context="/app/settings" onClick={handleNavigate} />
                     <ListItem label="Logout" icon={<LogoutIcon />} onClick={handleLogout} />
                 </List>
             </Container>

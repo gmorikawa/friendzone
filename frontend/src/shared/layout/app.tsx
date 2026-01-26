@@ -15,7 +15,7 @@ export function AppLayout() {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: { xs: 2, md: 4, lg: 8 },
+                padding: { xs: 0, md: 4, lg: 8 },
             }}
         >
             <Logo />
