@@ -16,6 +16,7 @@ import { useSession } from "@/features/auth/hooks/session";
 import { validateUserUpdateData } from "@/features/user/utils/validation";
 import { updateUser } from "@/features/user/utils/api";
 import { Paragraph } from "@/components/typography/paragraph";
+import type { HttpError } from "@/shared/http/utils/error-handling";
 
 export interface UserFormProps {
     user: User;
@@ -53,8 +54,8 @@ export function UserForm({ user }: UserFormProps) {
                         name: user.name,
                     });
                 })
-                .catch((_: Error) => {
-                    alert.showErrorMessage("Failed to update user profile.");
+                .catch((error: HttpError) => {
+                    alert.showErrorMessage(error.message);
                 });
         },
     });

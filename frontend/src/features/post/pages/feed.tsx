@@ -1,5 +1,7 @@
+import type { HttpError } from "@/shared/http/utils/error-handling";
 import { useNavigate } from "@/shared/router/hooks/navigate";
 
+import { useAlert } from "@/components/feedback/alert";
 import { Container } from "@/components/containers/container";
 import { Stack } from "@/components/containers/stack";
 
@@ -10,7 +12,7 @@ import { PostCard } from "@/features/post/components/post-card";
 import { deletePost } from "@/features/post/utils/api";
 
 export function FeedPage() {
-
+    const alert = useAlert();
     const session = useSession();
     const navigate = useNavigate();
 
@@ -24,13 +26,15 @@ export function FeedPage() {
         deletePost(session, post.id)
             .then(() => {
                 feedController.refresh();
+            })
+            .catch((error: HttpError) => {
+                alert.showErrorMessage(error.message);
             });
     };
 
     const canEdit = (post: Post): boolean => {
         return session?.loggedUser?.id === post.createdBy.id;
     };
-
 
     return (
         <Container>

@@ -1,3 +1,4 @@
+import type { HttpError } from "@/shared/http/utils/error-handling";
 import { useNavigate } from "@/shared/router/hooks/navigate";
 
 import { useAlert } from "@/components/feedback/alert";
@@ -10,7 +11,7 @@ import type { CreatePost } from "@/features/post/types/create-post";
 import { useSession } from "@/features/auth/hooks/session";
 import { validatePostCreateData } from "@/features/post/utils/validation";
 import { createPost } from "@/features/post/utils/api";
-import { PostForm } from "../components/post-form";
+import { PostForm } from "@/features/post/components/post-form";
 
 export function PostCreatePage() {
     const alert = useAlert();
@@ -29,8 +30,8 @@ export function PostCreatePage() {
                     alert.showSuccessMessage("Post created successfully.");
                     navigate.to("/app/feed");
                 })
-                .catch((_: Error) => {
-                    alert.showErrorMessage("Failed to create post. Please try again.");
+                .catch((error: HttpError) => {
+                    alert.showErrorMessage(error.message);
                 });
         }
     });

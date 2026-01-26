@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import type { HttpError } from "@/shared/http/utils/error-handling";
 import { useNavigate } from "@/shared/router/hooks/navigate";
 import { useParams } from "@/shared/router/hooks/params";
 
@@ -36,8 +37,8 @@ export function PostUpdatePage() {
                     alert.showSuccessMessage("Post updated successfully.");
                     navigate.to("/app/feed");
                 })
-                .catch((_: Error) => {
-                    alert.showErrorMessage("Failed to update post. Please try again.");
+                .catch((error: HttpError) => {
+                    alert.showErrorMessage(error.message);
                 });
         }
     });

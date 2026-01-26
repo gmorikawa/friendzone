@@ -1,5 +1,8 @@
 import axios, { type AxiosResponse } from "axios";
+
 import { Environment } from "@/config/environment";
+
+import { handleHttpError } from "@/shared/http/utils/error-handling";
 
 import type { Session } from "@/features/auth/types/session";
 import type { SignUpUser } from "@/features/auth/types/sign-up-user";
@@ -8,7 +11,10 @@ import type { PasswordResetRequest } from "@/features/auth/types/password-reset-
 import type { PasswordRecovery } from "@/features/auth/types/password-recovery";
 import type { CreateUser } from "@/features/user/types/create-user";
 
-export async function signUp(signUpData: SignUpUser) {
+export async function signUp(
+    signUpData: SignUpUser
+): Promise<boolean> {
+    const url = `${Environment.API_URL}/auth/sign-up`;
     const body: { user: CreateUser } = {
         user: {
             name: {
@@ -20,42 +26,52 @@ export async function signUp(signUpData: SignUpUser) {
         }
     };
 
-    return axios.post(`${Environment.API_URL}/auth/sign-up`, body);
+    return axios.post<boolean>(url, body)
+        .then((response: AxiosResponse) => response.data)
+        .catch(handleHttpError);
 }
 
-export async function logIn(logInData: LogInCredentials): Promise<Session> {
-    const body = logInData;
+export async function logIn(
+    data: LogInCredentials
+): Promise<Session> {
+    const url = `${Environment.API_URL}/auth/log-in`;
 
-    return axios.post(`${Environment.API_URL}/auth/log-in`, body)
-        .then((response: AxiosResponse) => {
-            return response.data;
-        });
+    return axios.post<Session>(url, data)
+        .then((response: AxiosResponse) => response.data)
+        .catch(handleHttpError);
 }
 
-export async function confirmEmail(token: string): Promise<boolean> {
-    return axios.patch(`${Environment.API_URL}/auth/confirm-email`, { token })
-        .then((response: AxiosResponse) => {
-            return response.data;
-        });
+export async function confirmEmail(
+    token: string
+): Promise<boolean> {
+    const url = `${Environment.API_URL}/auth/confirm-email`;
+
+    return axios.patch<boolean>(url, { token })
+        .then((response: AxiosResponse) => response.data)
+        .catch(handleHttpError);
 }
 
-export async function requestPasswordReset(passwordResetRequest: PasswordResetRequest): Promise<boolean> {
-    const body = passwordResetRequest;
+export async function requestPasswordReset(
+    data: PasswordResetRequest
+): Promise<boolean> {
+    const url = `${Environment.API_URL}/auth/password-reset`;
 
-    return axios.post(`${Environment.API_URL}/auth/password-reset`, body)
-        .then((response: AxiosResponse) => {
-            return response.data;
-        });
+    return axios.post<boolean>(url, data)
+        .then((response: AxiosResponse) => response.data)
+        .catch(handleHttpError);
 }
 
-export async function resetPassword(token: string, passwordRecovery: PasswordRecovery): Promise<boolean> {
-    const body = {
+export async function resetPassword(
+    token: string,
+    passwordRecovery: PasswordRecovery
+): Promise<boolean> {
+    const url = `${Environment.API_URL}/auth/password-reset`;
+    const data = {
         token,
         password: passwordRecovery.password
     };
 
-    return axios.patch(`${Environment.API_URL}/auth/password-reset`, body)
-        .then((response: AxiosResponse) => {
-            return response.data;
-        });
+    return axios.patch<boolean>(url, data)
+        .then((response: AxiosResponse) => response.data)
+        .catch(handleHttpError);
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect, Fragment } from "react";
 import { Divider } from "@mui/material";
 
+import type { HttpError } from "@/shared/http/utils/error-handling";
 import { useNavigate } from "@/shared/router/hooks/navigate";
 
 import { useAlert } from "@/components/feedback/alert";
@@ -34,8 +35,8 @@ export function UserListPage() {
             .then((fetchedUsers: User[]) => {
                 setUsers(fetchedUsers);
             })
-            .catch((_: Error) => {
-                alert.showErrorMessage("Failed to load users.");
+            .catch((error: HttpError) => {
+                alert.showErrorMessage(error.message);
             });
     };
 

@@ -1,9 +1,13 @@
 import axios, { type AxiosResponse } from "axios";
 
 import { Environment } from "@/config/environment";
+
+import { handleHttpError } from "@/shared/http/utils/error-handling";
+import { authorizationHeader } from "@/shared/http/utils/headers";
+
 import type { Session } from "@/features/auth/types/session";
-import type { Friend } from "../types/friend";
-import type { FriendStatus } from "../types/enum";
+import type { Friend } from "@/features/friend/types/friend";
+import type { FriendStatus } from "@/features/friend/types/enum";
 
 export async function getFriendsByStatus(
     session: Session,
@@ -11,18 +15,11 @@ export async function getFriendsByStatus(
     status: FriendStatus
 ): Promise<Friend[]> {
     const url = `${Environment.API_URL}/users/${userId}/friends/status/${status}`;
+    const headers = authorizationHeader(session);
 
-    return axios.get<any[]>(
-        url,
-        {
-            headers: {
-                Authorization: `Bearer ${session.token}`,
-            },
-        }
-    )
-        .then((response: AxiosResponse) => {
-            return response.data;
-        });
+    return axios.get<any[]>(url, { headers })
+        .then((response: AxiosResponse) => response.data)
+        .catch(handleHttpError);
 }
 
 export async function requestFriendship(
@@ -31,19 +28,11 @@ export async function requestFriendship(
     partnerId: string
 ): Promise<boolean> {
     const url = `${Environment.API_URL}/users/${userId}/friends/${partnerId}`;
+    const headers = authorizationHeader(session);
 
-    return axios.post<boolean>(
-        url,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${session.token}`,
-            },
-        }
-    )
-        .then((response: AxiosResponse) => {
-            return response.data;
-        });
+    return axios.post<boolean>(url, {}, { headers })
+        .then((response: AxiosResponse) => response.data)
+        .catch(handleHttpError);
 }
 
 export async function acceptFriendship(
@@ -52,19 +41,11 @@ export async function acceptFriendship(
     partnerId: string
 ): Promise<boolean> {
     const url = `${Environment.API_URL}/users/${userId}/friends/${partnerId}/accept`;
+    const headers = authorizationHeader(session);
 
-    return axios.patch<boolean>(
-        url,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${session.token}`,
-            },
-        }
-    )
-        .then((response: AxiosResponse) => {
-            return response.data;
-        });
+    return axios.patch<boolean>(url, {}, { headers })
+        .then((response: AxiosResponse) => response.data)
+        .catch(handleHttpError);
 }
 
 export async function declineFriendship(
@@ -73,19 +54,11 @@ export async function declineFriendship(
     partnerId: string
 ): Promise<boolean> {
     const url = `${Environment.API_URL}/users/${userId}/friends/${partnerId}/decline`;
+    const headers = authorizationHeader(session);
 
-    return axios.patch<boolean>(
-        url,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${session.token}`,
-            },
-        }
-    )
-        .then((response: AxiosResponse) => {
-            return response.data;
-        });
+    return axios.patch<boolean>(url, {}, { headers })
+        .then((response: AxiosResponse) => response.data)
+        .catch(handleHttpError);
 }
 
 export async function removeFriendship(
@@ -94,16 +67,9 @@ export async function removeFriendship(
     partnerId: string
 ): Promise<boolean> {
     const url = `${Environment.API_URL}/users/${userId}/friends/${partnerId}`;
+    const headers = authorizationHeader(session);
 
-    return axios.delete<boolean>(
-        url,
-        {
-            headers: {
-                Authorization: `Bearer ${session.token}`,
-            },
-        }
-    )
-        .then((response: AxiosResponse) => {
-            return response.data;
-        });
+    return axios.delete<boolean>(url, { headers })
+        .then((response: AxiosResponse) => response.data)
+        .catch(handleHttpError);
 }

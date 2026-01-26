@@ -1,5 +1,7 @@
 import { useState, useEffect, Fragment } from "react";
 
+import type { HttpError } from "@/shared/http/utils/error-handling";
+
 import { useAlert } from "@/components/feedback/alert";
 import { Container } from "@/components/containers/container";
 
@@ -19,8 +21,8 @@ export function UserSettings() {
             .then((fetchedUser: User) => {
                 setUser(fetchedUser);
             })
-            .catch((_: Error) => {
-                alert.showErrorMessage("Failed to load user profile.");
+            .catch((error: HttpError) => {
+                alert.showErrorMessage(error.message);
             });
     }, []);
     return (
