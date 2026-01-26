@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, Req } from "@nestjs/common";
 
 import type { CreateUserDTO, UpdateUserDTO } from "./user.dto";
 import type {  } from "./user.dto";
 import { User, UserDocument } from "./user.schema";
 import { UserService } from "./user.service";
 import { UserNotFoundError } from "./user.errors";
+import { LoggedUser } from "./interfaces/logged-user.interface";
 
 @Controller("api/users")
 export class UserController {
@@ -14,8 +15,10 @@ export class UserController {
     ) { }
 
     @Get()
-    public async findAll(): Promise<User[]> {
-        return this.service.findAll()
+    public async findAll(
+        @Req() { user }: Request & { user: LoggedUser }
+    ): Promise<User[]> {
+        return this.service.findAll(user)
             .then((users) => users.map((user) => user.toJSON()));
     }
 

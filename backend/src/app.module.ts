@@ -9,6 +9,7 @@ import { UserModule } from "./modules/user/user.module";
 import { AuthModule } from './modules/auth/auth.module';
 import { PostModule } from './modules/post/post.module';
 import { AuthorizationMiddleware } from "./common/middlewares/authorization.middleware";
+import { FriendModule } from './modules/friend/friend.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { AuthorizationMiddleware } from "./common/middlewares/authorization.midd
         AuthModule,
         UserModule,
         PostModule,
+        FriendModule,
     ],
     controllers: [
         AppController

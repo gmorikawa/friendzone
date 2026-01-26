@@ -4,6 +4,7 @@ import { Prop, raw, Schema, SchemaFactory, Virtual } from "@nestjs/mongoose";
 
 import type { Name } from "./interfaces/name.interface";
 import { UserStatus } from "./user.enum";
+import { Friend } from "../friend/friend.schema";
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -76,7 +77,17 @@ export class User {
         default: () => new Date(),
     })
     updatedAt: Date;
+
+    friendship?: Friend;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+const UserSchema = SchemaFactory.createForClass(User);
+UserSchema
+    .virtual("friendship", {
+        ref: "Friend",
+        localField: "_id",
+        foreignField: "partner"
+    });
+
+export { UserSchema }
 export const UserFeature = { name: User.name, schema: UserSchema };

@@ -7,6 +7,7 @@ import { User, UserDocument } from "./user.schema";
 import { CreateUserDTO, UpdateUserDTO } from "./user.dto";
 import type { HashedPassword, PasswordHasher, PlainPassword } from "./interfaces/password-hasher.interface";
 import { EmailAlreadyExistsError } from "./user.errors";
+import { LoggedUser } from "./interfaces/logged-user.interface";
 
 @Injectable()
 export class UserService {
@@ -19,8 +20,15 @@ export class UserService {
         return this.model.findOne({ email });
     }
 
-    public async findAll(): Promise<UserDocument[]> {
-        return this.model.find();
+    public async findAll(loggedUser: LoggedUser): Promise<UserDocument[]> {
+        return this.model.find()
+            .populate({
+                path: "friendship",
+                justOne: true,
+                match: {
+                    "user": loggedUser.id
+                },
+            });
     }
 
     public async findById(id: string): Promise<UserDocument | null> {
