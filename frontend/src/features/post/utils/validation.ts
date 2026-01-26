@@ -6,7 +6,9 @@ import { validateData } from "@/shared/form/utils/validator";
 import type { CreateComment, CreatePost } from "@/features/post/types/create-post";
 import type { UpdatePost } from "@/features/post/types/update-post";
 
-export const postContentValidation = z.string().min(1, "Content is required");
+export const postContentValidation = z.string()
+    .min(1, "Content is required")
+    .max(255, "Content must be at most 255 characters");
 export const postCreatedByValidation = z.string().min(1, "Created By is required");
 
 export function validatePostCreateData(data: Partial<CreatePost>): ValidationResult {
