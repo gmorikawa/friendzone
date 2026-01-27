@@ -2,6 +2,8 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+const PORT = 3000;
+
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [
@@ -9,13 +11,16 @@ export default defineConfig({
         tsconfigPaths(),
     ],
     preview: {
-        port: 5173,
+        port: PORT,
         strictPort: true,
     },
     server: {
-        port: 5173,
+        port: PORT,
         strictPort: true,
         host: true,
-        origin: "http://0.0.0.0:5173",
+        origin: `http://0.0.0.0:${PORT}`,
+        allowedHosts: [
+            "friendzone.gmorikawa.dev"
+        ],
     },
 });
