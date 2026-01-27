@@ -1,6 +1,36 @@
 name: friendzone
 
 services:
+  api:
+    build: ../backend
+    container_name: friendzone-api
+    restart: always
+    ports:
+      - 3010:3010
+    environment:
+      PORT: 3010
+    env_file:
+      - ./api.env
+    depends_on:
+      - mongodb
+    networks:
+      - friendzone_network
+
+  app:
+    build: ../frontend
+    container_name: friendzone-app
+    restart: always
+    ports:
+      - 3000:5173
+    environment:
+      VITE_APPLICATION_NAME: "Friendzone"
+    env_file:
+      - ./app.env
+    depends_on:
+      - api
+    networks:
+      - friendzone_network
+
   mongodb:
     image: mongo:8-noble
     container_name: friendzone-mongodb
@@ -24,17 +54,6 @@ services:
     networks:
       - friendzone_network
 
-  redis:
-    image: redis:8-alpine
-    container_name: friendzone-redis
-    restart: always
-    ports:
-      - 5040:6379
-    volumes:
-      - friendzone_redis_mnt:/data
-    networks:
-      - friendzone_network
-    
   mongodb-client:
     image: mongo-express:latest
     container_name: friendzone-mongodb-client
