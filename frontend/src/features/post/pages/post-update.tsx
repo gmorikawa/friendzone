@@ -58,7 +58,7 @@ export function PostUpdatePage() {
     return (
         <Container>
             <Stack spacing={2}>
-                <Title level={3}>Update Post</Title>
+                <Title level={5}>Update Post</Title>
 
                 <PostForm form={form} />
             </Stack>

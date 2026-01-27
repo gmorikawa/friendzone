@@ -79,7 +79,7 @@ interface PostBodyProps {
 function PostBody({ post }: PostBodyProps) {
     return (
         <Stack spacing={1}>
-            <Paragraph sx={{ textAlign: "right" }}>
+            <Paragraph sx={{ textAlign: "right" }} size="small" color="textSecondary">
                 Posted on {new Date(post.createdAt).toLocaleString()}
             </Paragraph>
 

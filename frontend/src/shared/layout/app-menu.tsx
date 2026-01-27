@@ -12,6 +12,7 @@ import { Container } from "@/components/containers/container";
 import { List, ListItem } from "@/components/data-display/list";
 
 import { useSession } from "@/features/auth/hooks/session";
+import { IconButton } from "@/components/inputs/icon-button";
 
 export function AppMenu() {
     const navigate = useNavigate();
@@ -30,14 +31,14 @@ export function AppMenu() {
     return (
         <Container
             sx={{
-                flexBasis: { xs: "150px", md: "200px", lg: "250px" },
-                flexShrink: 0,
+                height: "100%",
+                flexBasis: "auto",
                 backgroundColor: "primary.light",
-                padding: 1,
 
-                display: "flex",
+                display: { xs: "none", sm: "flex" },
                 flexDirection: "column",
-                justifyContent: "space-between"
+                justifyContent: "space-between",
+
             }}
         >
             <List>
@@ -54,5 +55,41 @@ export function AppMenu() {
                 </List>
             </Container>
         </Container>
+    );
+}
+
+export function FooterAppMenu() {
+    const navigate = useNavigate();
+    const session = useSession();
+
+    const handleLogout = () => {
+        session.reset();
+        navigate.to("/auth/log-in");
+    };
+
+    const handleNavigate = (path?: string) => {
+        if (!path) return;
+        navigate.to(path);
+    };
+
+    return (
+        <List
+            sx={{
+                width: "100%",
+                flexBasis: "auto",
+                backgroundColor: "primary.light",
+
+                display: { xs: "flex", sm: "none" },
+                flexDirection: "row",
+                justifyContent: "space-around",
+            }}
+        >
+            <IconButton onClick={() => handleNavigate("/app/users")}><UsersIcon/></IconButton>
+            <IconButton onClick={() => handleNavigate("/app/feed")}><FeedIcon /></IconButton>
+            <IconButton onClick={() => handleNavigate("/app/posts")}><WritePostIcon /></IconButton>
+            <IconButton onClick={() => handleNavigate("/app/friends")}><FriendsIcon /></IconButton>
+            <IconButton onClick={() => handleNavigate("/app/settings")}><SettingsIcon /></IconButton>
+            <IconButton onClick={handleLogout}><LogoutIcon /></IconButton>
+        </List>
     );
 }

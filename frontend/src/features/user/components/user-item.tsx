@@ -19,30 +19,38 @@ export function UserItem({ user, hideEmail, contentSlot, actionSlot }: UserItemP
         <Container
             sx={{
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: { xs: "column", sm: "row" },
                 gap: 2,
             }}
         >
-            <Container sx={{ flexBasis: "auto" }}>
-                <Avatar initials={user.name.first.charAt(0) + user.name.last.charAt(0)} />
-            </Container>
+            <Container
+                sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 2,
+                }}
+            >
+                <Container sx={{ flexBasis: "auto" }}>
+                    <Avatar initials={user.name.first.charAt(0) + user.name.last.charAt(0)} />
+                </Container>
 
-            <Container>
-                <Paragraph size="medium" fontWeight="bold">
-                    {buildFullName(user)}
-                </Paragraph>
-
-                {!hideEmail && (
-                    <Paragraph size="small">
-                        {user.email}
+                <Container>
+                    <Paragraph size="medium" fontWeight="bold">
+                        {buildFullName(user)}
                     </Paragraph>
-                )}
 
-                {contentSlot && (
-                    <Container sx={{ marginTop: 1 }}>
-                        {contentSlot}
-                    </Container>
-                )}
+                    {!hideEmail && (
+                        <Paragraph size="small">
+                            {user.email}
+                        </Paragraph>
+                    )}
+
+                    {contentSlot && (
+                        <Container sx={{ marginTop: 1 }}>
+                            {contentSlot}
+                        </Container>
+                    )}
+                </Container>
             </Container>
 
             <Container sx={{ marginLeft: "auto" }}>

@@ -39,7 +39,7 @@ export function PostCreatePage() {
     return (
         <Container>
             <Stack spacing={2}>
-                <Title level={3}>Create Post</Title>
+                <Title level={5}>Create Post</Title>
 
                 <PostForm form={form} />
             </Stack>
