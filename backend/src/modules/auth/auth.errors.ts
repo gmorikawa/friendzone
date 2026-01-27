@@ -20,3 +20,10 @@ export class InvalidConfirmationToken extends HttpException {
         this.name = "InvalidConfirmationToken";
     }
 }
+
+export class EmailNotConfirmedError extends HttpException {
+    constructor() {
+        super("Email address not confirmed. Please confirm your email to proceed.", HttpStatus.FORBIDDEN);
+        this.name = "EmailNotConfirmedError";
+    }
+}

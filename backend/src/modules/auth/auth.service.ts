@@ -4,12 +4,13 @@ import { UserService } from "../user/user.service";
 import { CreateUserDTO } from "../user/user.dto";
 import { UserDocument } from "../user/user.schema";
 import { UserSession } from "./interfaces/user-session.interface";
-import { AuthenticationError, InvalidConfirmationToken } from "./auth.errors";
+import { AuthenticationError, EmailNotConfirmedError, InvalidConfirmationToken } from "./auth.errors";
 import type { SecretKey, Token, TokenGenerator } from "./interfaces/token.interface";
 import { LoggedUser } from "../user/interfaces/logged-user.interface";
 import type { MailSender } from "../../common/mail-sender/interfaces/mail-sender.interface";
 import { TokenContext } from "./enums/token-context";
 import { PlainPassword } from "../user/interfaces/password-hasher.interface";
+import { UserStatus } from "../user/user.enum";
 
 @Injectable()
 export class AuthService {
@@ -70,6 +71,10 @@ export class AuthService {
 
         if (!user) {
             throw new AuthenticationError();
+        }
+
+        if (user.status !== UserStatus.ACTIVE) {
+            throw new EmailNotConfirmedError();
         }
 
         const isPasswordValid = await this.userService.checkPassword(password, user.password);

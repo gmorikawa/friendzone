@@ -8,6 +8,7 @@ import { CreateUserDTO, UpdateUserDTO } from "./user.dto";
 import type { HashedPassword, PasswordHasher, PlainPassword } from "./interfaces/password-hasher.interface";
 import { EmailAlreadyExistsError } from "./user.errors";
 import { LoggedUser } from "./interfaces/logged-user.interface";
+import { UserStatus } from "./user.enum";
 
 @Injectable()
 export class UserService {
@@ -21,7 +22,7 @@ export class UserService {
     }
 
     public async findAll(loggedUser: LoggedUser): Promise<UserDocument[]> {
-        return this.model.find()
+        return this.model.find({ status: UserStatus.ACTIVE })
             .populate({
                 path: "friendship",
                 justOne: true,
