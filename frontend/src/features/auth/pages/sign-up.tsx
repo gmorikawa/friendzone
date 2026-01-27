@@ -32,7 +32,7 @@ export function SignUpPage() {
         onSubmit: (data: SignUpUser) => {
             signUp(data)
                 .then(() => {
-                    navigate.to("/auth/log-in");
+                    navigate.to("/auth/sign-up/confirmation");
                 })
                 .catch((_: Error) => {
                     alert.showErrorMessage("Failed to create account. Please try again later.");

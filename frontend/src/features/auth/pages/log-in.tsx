@@ -43,8 +43,8 @@ export function LogInPage() {
                     session.update(token, loggedUser);
                     navigate.to("/app/users");
                 })
-                .catch((_: Error) => {
-                    alert.showErrorMessage("Failed to log in. Please check your credentials and try again.");
+                .catch((error: Error) => {
+                    alert.showErrorMessage(error.message);
                 });
         },
     });
@@ -81,9 +81,11 @@ export function LogInPage() {
                         error={form.getError("password")}
                     />
 
-                    <Button variant="contained" type="submit">
-                        Log In
-                    </Button>
+                    <Container sx={{ display: "flex", justifyContent: "center" }}>
+                        <Button variant="contained" type="submit">
+                            Sign In
+                        </Button>
+                    </Container>
 
                     <Stack spacing={1}>
                         <Container sx={{ display: "flex", justifyContent: "flex-end" }}>

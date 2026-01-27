@@ -5,6 +5,7 @@ import { AuthLayout } from "@/shared/layout/auth";
 import { AppLayout } from "@/shared/layout/app";
 
 import { SignUpPage } from "@/features/auth/pages/sign-up";
+import { SignUpConfirmationPage } from "@/features/auth/pages/sign-up-confirmation";
 import { LogInPage } from "@/features/auth/pages/log-in";
 import { ConfirmEmailPage } from "@/features/auth/pages/confirm-email";
 import { PasswordResetPage } from "@/features/auth/pages/password-reset";
@@ -29,6 +30,7 @@ export function RouteProvider() {
                     <Route path="auth" element={<AuthLayout />}>
                         <Route index element={<Navigate to="/auth/log-in" replace />} />
                         <Route path="sign-up" element={<SignUpPage />} />
+                        <Route path="sign-up/confirmation" element={<SignUpConfirmationPage />} />
                         <Route path="log-in" element={<LogInPage />} />
                         <Route path="confirm-email" element={<ConfirmEmailPage />} />
                         <Route path="password-reset" element={<PasswordResetPage />} />
