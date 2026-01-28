@@ -141,7 +141,7 @@ function CommentSection({ feedController, post }: CommentSectionProps) {
                         user={comment.createdBy}
                         hideEmail
                         contentSlot={(
-                            <Paragraph size="small">
+                            <Paragraph size="small" sx={{ whiteSpace: "pre-wrap" }}>
                                 {comment.content}
                             </Paragraph>
                         )}
