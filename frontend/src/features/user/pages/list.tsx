@@ -15,6 +15,7 @@ import { UserItem } from "@/features/user/components/user-item";
 import { FriendshipActions } from "@/features/friend/components/friendship-actions";
 import { useFriendManagement } from "@/features/friend/hooks/friend-management";
 import type { Friend } from "@/features/friend/types/friend";
+import { Paragraph } from "@/components/typography/paragraph";
 
 export function UserListPage() {
     const navigate = useNavigate();
@@ -65,6 +66,13 @@ export function UserListPage() {
                                         />
                                     )
                                     : null
+                            }
+                            contentSlot={
+                                <Container>
+                                    <Paragraph sx={{ whiteSpace: "pre-wrap" }}>
+                                        {user.biography || ""}
+                                    </Paragraph>
+                                </Container>
                             }
                         />
                         <Divider />
