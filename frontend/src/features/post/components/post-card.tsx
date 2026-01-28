@@ -84,7 +84,7 @@ function PostBody({ post }: PostBodyProps) {
             </Paragraph>
 
             <Container>
-                <Paragraph size="medium">
+                <Paragraph size="medium" sx={{ whiteSpace: "pre-wrap" }}>
                     {post.content}
                 </Paragraph>
             </Container>
