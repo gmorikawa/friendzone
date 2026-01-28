@@ -61,12 +61,18 @@ services:
       - 443:443
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - friendzone_nginx_mnt:/etc/nginx/templates
+      - ./certbot/www/:/var/www/certbot/:ro
     depends_on:
       - app
       - api
     networks:
       - friendzone_network
+  
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./data/certbot/www/:/var/www/certbot/:rw
+      - ./data/certbot/conf/:/etc/letsencrypt/:rw
 
   mongodb-client:
     image: mongo-express:latest
