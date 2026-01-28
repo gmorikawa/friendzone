@@ -6,7 +6,7 @@ export function BaseLayout() {
         <Container
             sx={{
                 width: "100%",
-                height: "100vh"
+                height: "100dvh",
             }}
         >
             <Outlet />
