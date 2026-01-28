@@ -17,8 +17,8 @@ export class UserService {
         @Inject("PasswordHasher") private passwordHasher: PasswordHasher,
     ) { }
 
-    public async findByEmail(email: string): Promise<UserDocument | null> {
-        return this.model.findOne({ email });
+    public async findByEmail(email: string, excludeUserId?: string): Promise<UserDocument | null> {
+        return this.model.findOne({ email, _id: { $ne: excludeUserId } });
     }
 
     public async findAll(loggedUser: LoggedUser): Promise<UserDocument[]> {
@@ -65,7 +65,7 @@ export class UserService {
             return null;
         }
 
-        if (await this.findByEmail(updateUser.email)) {
+        if (await this.findByEmail(updateUser.email, id)) {
             throw new EmailAlreadyExistsError(updateUser.email);
         }
 
