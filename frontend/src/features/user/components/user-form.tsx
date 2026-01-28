@@ -17,6 +17,7 @@ import { validateUserUpdateData } from "@/features/user/utils/validation";
 import { updateUser } from "@/features/user/utils/api";
 import { Paragraph } from "@/components/typography/paragraph";
 import type { HttpError } from "@/shared/http/utils/error-handling";
+import { useNavigate } from "@/shared/router/hooks/navigate";
 
 export interface UserFormProps {
     user: User;
@@ -25,6 +26,7 @@ export interface UserFormProps {
 }
 
 export function UserForm({ user, blockEmail }: UserFormProps) {
+    const navigate = useNavigate();
     const alert = useAlert();
     const session = useSession();
 
@@ -55,6 +57,8 @@ export function UserForm({ user, blockEmail }: UserFormProps) {
                         email: user.email,
                         name: user.name,
                     });
+                    
+                    navigate.to("/app/users");
                 })
                 .catch((error: HttpError) => {
                     alert.showErrorMessage(error.message);
