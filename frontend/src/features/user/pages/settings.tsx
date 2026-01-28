@@ -29,7 +29,7 @@ export function UserSettings() {
     return (
         <Container>
             {user ? (
-                <UserForm user={user} />
+                <UserForm user={user} blockEmail />
             ) : (
                 <Paragraph>Loading user profile...</Paragraph>
             )}

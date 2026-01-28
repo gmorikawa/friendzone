@@ -8,9 +8,10 @@ export interface TextFieldProps {
 
     onChange?: (value: string) => void;
     onBlur?: (value: string) => void;
+    disabled?: boolean;
 }
 
-export function TextField({ label, value, error, onChange, onBlur }: TextFieldProps) {
+export function TextField({ label, value, error, onChange, onBlur, disabled }: TextFieldProps) {
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (onChange) {
@@ -34,6 +35,8 @@ export function TextField({ label, value, error, onChange, onBlur }: TextFieldPr
                 fullWidth
                 error={Boolean(error)}
                 helperText={error}
+
+                disabled={disabled}
 
                 onChange={handleChange}
                 onBlur={handleBlur}

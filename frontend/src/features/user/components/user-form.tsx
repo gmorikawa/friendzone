@@ -20,9 +20,11 @@ import type { HttpError } from "@/shared/http/utils/error-handling";
 
 export interface UserFormProps {
     user: User;
+
+    blockEmail?: boolean;
 }
 
-export function UserForm({ user }: UserFormProps) {
+export function UserForm({ user, blockEmail }: UserFormProps) {
     const alert = useAlert();
     const session = useSession();
 
@@ -95,6 +97,7 @@ export function UserForm({ user }: UserFormProps) {
                             onChange={(newValue: string) => form.handleChange("email", newValue)}
                             onBlur={(newValue: string) => form.handleBlur("email", newValue)}
                             error={form.getError("email")}
+                            disabled={blockEmail}
                         />
 
                         <TextareaField

@@ -69,7 +69,7 @@ export class UserService {
             throw new EmailAlreadyExistsError(updateUser.email);
         }
 
-        user.email = updateUser.email ?? user.email;
+        // user.email = updateUser.email ?? user.email;
         user.name.first = updateUser.name?.first ?? user.name.first;
         user.name.last = updateUser.name?.last ?? user.name.last;
         user.biography = updateUser.biography ?? user.biography;
