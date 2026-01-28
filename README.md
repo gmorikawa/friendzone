@@ -30,7 +30,7 @@ A simple social-style application.
     2. Password.
     3. First name.
     4. Last name.
-3. After registration, users should receive an email with a confirmation link. Users cannot login in the application prior to email confirmation.
+3. After registration, the user should receive an email with a confirmation link. Users cannot login in the application prior to email confirmation.
 
 ### Authentication and Authorization
 
@@ -70,6 +70,7 @@ A simple social-style application.
 
 ## Assumptions and Limitations
 
-* Friend-list should not change how the feed is displayed.
+* Friends should not change how the feed is displayed.
 * There will not be comments on comments in posts.
 * For simplicity, I am not considering a user deletion case in this application.
+* Since the system works with a stateless JWT tokens without persisting the state of the user session on the backend, even if the user executes a logout, in reality the token continues valid and usable to authorize requests.
