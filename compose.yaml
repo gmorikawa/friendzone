@@ -34,6 +34,28 @@ services:
     entrypoint: /opt/mssql-tools18/bin/sqlcmd
     command: ["-S", "database", "-U", "sa", "-C", "-b", "-i", "/init.sql"]
     restart: "no"
+  email:
+    image: axllent/mailpit:latest
+    container_name: mailpit
+    restart: unless-stopped
+    ports:
+      - "5003:8025" # Web UI (Access via browser)
+      - "5004:1025" # SMTP Port (App connection)
+    environment:
+      TZ: Asia/Tokyo
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+
+      MP_UI_AUTH: true
+      MP_UI_AUTH_FILE: /data/ui.auth
+
+      MP_SMTP_AUTH: true
+      MP_SMTP_AUTH_FILE: /data/mailpit.auth
+      MP_SMTP_AUTH_ALLOW_INSECURE: true
+    volumes:
+      - mnt-mailpit:/data
+      - ./docker/mailpit/smtp.auth:/data/mailpit.auth:ro
+      - ./docker/mailpit/ui.auth:/data/ui.auth:ro
 
 volumes:
   mnt-sqlserver:
@@ -42,3 +64,9 @@ volumes:
       type: 'none'
       o: 'bind'
       device: '${PWD}/data/sqlserver'
+  mnt-mailpit:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '${PWD}/data/mailpit'

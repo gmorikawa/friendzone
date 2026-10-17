@@ -1,0 +1,63 @@
+= Mailpit
+:toc: left
+:sectnums:
+
+== Overview
+
+Mailpit is a web-based email testing tool that allows you to capture and view emails sent from your application in a development or testing environment. It provides a web interface to view emails and supports SMTP for sending emails from your application.
+
+== Docker Setup
+
+To set up Mailpit using Docker, you can use the following configuration in your `compose.yaml` file:
+
+```yaml
+  email:
+    image: axllent/mailpit:latest
+    container_name: mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025" # Web UI (Access via browser)
+      - "1025:1025" # SMTP Port (App connection)
+    environment:
+      TZ: Asia/Tokyo
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+
+      MP_UI_AUTH: true
+      MP_UI_AUTH_FILE: /data/ui.auth
+
+      MP_SMTP_AUTH: true
+      MP_SMTP_AUTH_FILE: /data/mailpit.auth
+      MP_SMTP_AUTH_ALLOW_INSECURE: true
+    volumes:
+      - mnt-mailpit:/data
+      - ./docker/mailpit/smtp.auth:/data/mailpit.auth:ro
+      - ./docker/mailpit/ui.auth:/data/ui.auth:ro
+```
+
+=== Generating Authentication Files
+
+There are two authentication files that need to be generated for Mailpit:
+
+- `smtp.auth`: This file contains the SMTP authentication credentials.
+- `ui.auth`: This file contains the web UI authentication credentials.
+
+You can generate these files using the following commands:
+
+```
+# Generate SMTP authentication file
+htpasswd -c ./docker/mailpit/smtp.auth <username>
+
+# Generate UI authentication file
+htpasswd -c ./docker/mailpit/ui.auth <username>
+```
+
+After running these commands, you will be prompted to enter a password for each user. Make sure to use strong passwords and keep these files secure.
+
+=== Notes
+
+- Ensure that the paths specified in the Docker volumes match the locations where the authentication files are generated.
+- The `MP_SMTP_AUTH_ALLOW_INSECURE` environment variable allows the use of plaintext authentication over non-TLS connections, which is suitable for development but should not be used in production.
+- The `MP_MAX_MESSAGES` environment variable controls the maximum number of messages stored by Mailpit. Adjust this value based on your needs.
+- The `MP_DATABASE` environment variable specifies the path to the Mailpit database file. Ensure that this path is correctly mapped to a persistent volume to avoid data loss.
+- The `MP_UI_AUTH` and `MP_SMTP_AUTH` environment variables enable authentication for the web UI and SMTP server, respectively. Make sure to generate the corresponding authentication files as described above.
