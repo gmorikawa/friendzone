@@ -1,0 +1,25 @@
+= Identity and Access
+:toc: left
+:sectnums:
+
+Identity and access management is the foundation for securing applications and ensuring that only authorized users can access the system.
+
+== Requirements
+
+* There are two types of users in the system: *member* users, that uses the social network application, and *admin* users, that manage the system.
+* There are two roles for admin users: *root admin*, who has full control over the system, and *moderator*, who can manage user accounts and content but has limited system-wide privileges.
+* Each type of user has a specific application, and they can only access their respective application.
+* Every user must use a unique username and a password to authenticate in the system. However, *admin* users and *member* users have separated contexts, meaning that one username can exist in both contexts independently.
+* *Members* must be able to register and manage their accounts.
+* *Admin* users cannot self-register their accounts, and must be created by another *root administrator*.
+* *Members* must be able to recover their accounts in case of lost credentials.
+* Upon successful authentication, *members* and *admin* users must be granted a session ID to authorize subsequent requests.
+* To register in the system, *members* must provide a unique username, a password, and unique email address.
+* *Members* can be assigned the following statuses: *pending*, *active*, *blocked*, or *deleted*.
+* After a user account is created, their status is initially set to *pending* until the account is verified by the owner through email.
+* Once the account is verified by email, the *member*'s status is updated to *active*.
+* *Members* can be blocked or deleted by *administrators* as needed.
+* *Members* cannot change their status directly; it must be managed by the system or *administrators* users only.
+* *Administrators* have the ability to manage user accounts, including changing their statuses and handling account recovery requests.
+* *Administrators* can block or delete *members* as needed.
+* Only *members* whose status is *pending* or *active* can access the system.
