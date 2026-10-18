@@ -15,9 +15,6 @@ To set up Mailpit using Docker, you can use the following configuration in your 
     image: axllent/mailpit:latest
     container_name: mailpit
     restart: unless-stopped
-    ports:
-      - "8025:8025" # Web UI (Access via browser)
-      - "1025:1025" # SMTP Port (App connection)
     environment:
       TZ: Asia/Tokyo
       MP_MAX_MESSAGES: 5000
@@ -55,6 +52,8 @@ htpasswd -c ./docker/mailpit/ui.auth <username>
 After running these commands, you will be prompted to enter a password for each user. Make sure to use strong passwords and keep these files secure.
 
 === Notes
+
+- In the complete development stack, Nginx serves the UI at `EMAIL_SCHEMA://EMAIL_DOMAIN:EMAIL_PORT` (using your `.env` values); add this hostname to your hosts file as described in the root README. Mailpit joins the shared Docker bridge network, and neither its UI nor SMTP port is published directly. Containers use `email:1025` for SMTP.
 
 - Ensure that the paths specified in the Docker volumes match the locations where the authentication files are generated.
 - The `MP_SMTP_AUTH_ALLOW_INSECURE` environment variable allows the use of plaintext authentication over non-TLS connections, which is suitable for development but should not be used in production.

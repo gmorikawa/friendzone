@@ -1,6 +1,84 @@
 name: friendzone
 
 services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: friendzone-nginx
+    environment:
+      WEB_CLIENT_DOMAIN: ${WEB_CLIENT_DOMAIN:?WEB_CLIENT_DOMAIN is not defined}
+      WEB_CLIENT_PORT: ${WEB_CLIENT_PORT:?WEB_CLIENT_PORT is not defined}
+      WEB_CLIENT_SCHEMA: ${WEB_CLIENT_SCHEMA:?WEB_CLIENT_SCHEMA is not defined}
+      OFFICE_CLIENT_DOMAIN: ${OFFICE_CLIENT_DOMAIN:?OFFICE_CLIENT_DOMAIN is not defined}
+      OFFICE_CLIENT_PORT: ${OFFICE_CLIENT_PORT:?OFFICE_CLIENT_PORT is not defined}
+      OFFICE_CLIENT_SCHEMA: ${OFFICE_CLIENT_SCHEMA:?OFFICE_CLIENT_SCHEMA is not defined}
+      CORE_DOMAIN: ${CORE_DOMAIN:?CORE_DOMAIN is not defined}
+      CORE_PORT: ${CORE_PORT:?CORE_PORT is not defined}
+      CORE_SCHEMA: ${CORE_SCHEMA:?CORE_SCHEMA is not defined}
+      EMAIL_DOMAIN: ${EMAIL_DOMAIN:?EMAIL_DOMAIN is not defined}
+      EMAIL_PORT: ${EMAIL_PORT:?EMAIL_PORT is not defined}
+      EMAIL_SCHEMA: ${EMAIL_SCHEMA:?EMAIL_SCHEMA is not defined}
+      NGINX_ENVSUBST_FILTER: "^(WEB_CLIENT|OFFICE_CLIENT|CORE|EMAIL)_(DOMAIN|PORT|SCHEMA)$"
+    volumes:
+      - ./docker/nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+    networks:
+      - friendzone-network
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    depends_on:
+      - core
+      - web-client
+      - office-client
+      - email
+
+  core:
+    build: ./api
+    container_name: friendzone-core
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      DOTNET_WATCH_RESTART_ON_RUDE_EDIT: "true"
+      DOTNET_WATCH_SUPPRESS_LAUNCH_BROWSER: "true"
+      Email__Smtp__Host: email
+      Email__Smtp__Port: "1025"
+    volumes:
+      - ./api:/workspace
+      - mtn-core:/workspace/bin
+      - mtn-core:/workspace/obj
+    networks:
+      - friendzone-network
+    depends_on:
+      sqlserver-init:
+        condition: service_completed_successfully
+      email:
+        condition: service_started
+
+  web-client:
+    build: ./app
+    container_name: friendzone-web-client
+    environment:
+      DOCKER_DEV: "true"
+      WEB_CLIENT_DOMAIN: ${WEB_CLIENT_DOMAIN:?WEB_CLIENT_DOMAIN is not defined}
+    volumes:
+      - ./app:/workspace
+      - mtn-web-client:/workspace/node_modules
+    networks:
+      - friendzone-network
+
+  office-client:
+    build: ./back-office
+    container_name: friendzone-office-client
+    environment:
+      NG_CLI_ANALYTICS: "false"
+      OFFICE_CLIENT_DOMAIN: ${OFFICE_CLIENT_DOMAIN:?OFFICE_CLIENT_DOMAIN is not defined}
+      __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS: ${OFFICE_CLIENT_DOMAIN:?OFFICE_CLIENT_DOMAIN is not defined}
+    volumes:
+      - ./back-office:/workspace
+      - mtn-office-client:/workspace/node_modules
+      - mtn-office-client:/workspace/.angular
+    networks:
+      - friendzone-network
+
   database:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: friendzone-database
@@ -8,14 +86,14 @@ services:
       ACCEPT_EULA: "Y"
       MSSQL_PID: Developer
       MSSQL_SA_PASSWORD: "Friendzone123!"
-    ports:
-      - "5002:1433"
+    networks:
+      - friendzone-network
     volumes:
       - mnt-sqlserver:/var/opt/mssql
     healthcheck:
       test:
         - CMD-SHELL
-        - /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C -b -Q "SELECT 1" > /dev/null
+        - /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C -b -Q "IF DB_ID(N'friendzone') IS NOT NULL EXEC(N'USE [friendzone]; SELECT 1'); ELSE SELECT 1;" > /dev/null
       interval: 5s
       timeout: 5s
       retries: 30
@@ -34,13 +112,12 @@ services:
     entrypoint: /opt/mssql-tools18/bin/sqlcmd
     command: ["-S", "database", "-U", "sa", "-C", "-b", "-i", "/init.sql"]
     restart: "no"
+    networks:
+      - friendzone-network
   email:
     image: axllent/mailpit:latest
-    container_name: mailpit
+    container_name: friendzone-mailpit
     restart: unless-stopped
-    ports:
-      - "5003:8025" # Web UI (Access via browser)
-      - "5004:1025" # SMTP Port (App connection)
     environment:
       TZ: Asia/Tokyo
       MP_MAX_MESSAGES: 5000
@@ -56,8 +133,13 @@ services:
       - mnt-mailpit:/data
       - ./docker/mailpit/smtp.auth:/data/mailpit.auth:ro
       - ./docker/mailpit/ui.auth:/data/ui.auth:ro
+    networks:
+      - friendzone-network
 
 volumes:
+  mtn-core:
+  mtn-web-client:
+  mtn-office-client:
   mnt-sqlserver:
     driver: local
     driver_opts:
@@ -70,3 +152,7 @@ volumes:
       type: 'none'
       o: 'bind'
       device: '${PWD}/data/mailpit'
+
+networks:
+  friendzone-network:
+    driver: bridge

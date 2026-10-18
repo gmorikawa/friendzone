@@ -1,3 +1,5 @@
 data/
+.env
 /api/
 /app/
+/back-office/
