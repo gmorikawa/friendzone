@@ -43,8 +43,8 @@ services:
       Email__Smtp__Port: "1025"
     volumes:
       - ./api:/workspace
-      - mtn-core:/workspace/bin
-      - mtn-core:/workspace/obj
+      - mnt-core:/workspace/bin
+      - mnt-core:/workspace/obj
     networks:
       - friendzone-network
     depends_on:
@@ -61,7 +61,6 @@ services:
       WEB_CLIENT_DOMAIN: ${WEB_CLIENT_DOMAIN:?WEB_CLIENT_DOMAIN is not defined}
     volumes:
       - ./app:/workspace
-      - mtn-web-client:/workspace/node_modules
     networks:
       - friendzone-network
 
@@ -74,8 +73,6 @@ services:
       __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS: ${OFFICE_CLIENT_DOMAIN:?OFFICE_CLIENT_DOMAIN is not defined}
     volumes:
       - ./back-office:/workspace
-      - mtn-office-client:/workspace/node_modules
-      - mtn-office-client:/workspace/.angular
     networks:
       - friendzone-network
 
@@ -114,6 +111,7 @@ services:
     restart: "no"
     networks:
       - friendzone-network
+
   email:
     image: axllent/mailpit:latest
     container_name: friendzone-mailpit
@@ -137,9 +135,9 @@ services:
       - friendzone-network
 
 volumes:
-  mtn-core:
-  mtn-web-client:
-  mtn-office-client:
+  mnt-core:
+  mnt-web-client:
+  mnt-office-client:
   mnt-sqlserver:
     driver: local
     driver_opts:
